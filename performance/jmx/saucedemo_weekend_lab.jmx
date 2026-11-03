@@ -2,7 +2,7 @@
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="SauceDemo weekend lab - HTTP document performance" enabled="true">
-      <stringProp name="TestPlan.comments">20 users / 60s ramp / 180s including ramp. HTML document requests only; no JavaScript execution or authenticated checkout.</stringProp>
+      <stringProp name="TestPlan.comments">20 users / 60s ramp / 180s including ramp. Login HTTP document and Chrome-verified Products SPA bootstrap /?/inventory.html. HTTP 200 plus app-root assertions remain strict. Does not measure JavaScript rendering or login transaction time; see route-evidence.json.</stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
@@ -72,7 +72,7 @@
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Products page" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/inventory.html</stringProp>
+          <stringProp name="HTTPSampler.path">/?/inventory.html</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>

@@ -1,7 +1,8 @@
-from .base_page import BasePage
+from decimal import Decimal
+from .app_page import AppPage
 
 
-class CheckoutPage(BasePage):
+class CheckoutPage(AppPage):
     def ready(self):
         self.path_is('/checkout-step-one.html')
         self.visible(self.testid('firstName'))
@@ -28,3 +29,25 @@ class CheckoutPage(BasePage):
         self.click(self.testid('finish'))
         self.path_is('/checkout-complete.html')
         return self.visible(self.testid('complete-header')).text
+
+    def overview_ready(self):
+        self.path_is('/checkout-step-two.html')
+        self.visible(self.testid('finish'))
+        return self
+
+    def cancel(self):
+        self.click(self.testid('cancel'))
+
+    def dismiss_error(self):
+        self.click(self.testid('error-button'))
+        self.wait.until(lambda d: not d.find_elements(*self.testid('error')))
+
+    def totals(self):
+        return {name: Decimal(self.visible(self.testid(testid)).text.split('$')[-1])
+                for name, testid in [('subtotal', 'subtotal-label'), ('tax', 'tax-label'), ('total', 'total-label')]}
+
+    def back_home(self):
+        self.click(self.testid('back-to-products'))
+
+    def generate_pdf(self):
+        self.click(self.testid('generate-pdf-order'))

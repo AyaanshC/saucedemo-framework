@@ -1,5 +1,6 @@
 param([switch]$WithJMeter)
 $ErrorActionPreference = 'Stop'
+$ProgressPreference = 'SilentlyContinue'
 Set-Location (Split-Path $PSScriptRoot -Parent)
 if (-not (Test-Path '.venv\Scripts\python.exe')) {
     if (Get-Command py -ErrorAction SilentlyContinue) { & py -3 -m venv .venv }
@@ -10,7 +11,10 @@ if (-not (Test-Path '.venv\Scripts\python.exe')) {
 if ($LASTEXITCODE -ne 0) { throw 'Python version check failed.' }
 & '.\.venv\Scripts\python.exe' -m pip install -r requirements.txt
 if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed.' }
-if ($WithJMeter) {
+if ($WithJMeter -and (Test-Path 'tools\apache-jmeter-5.6.3\bin\ApacheJMeter.jar')) {
+    Write-Host 'JMeter 5.6.3 is already installed locally. Java 8+ is required.'
+}
+elseif ($WithJMeter) {
     New-Item -ItemType Directory -Force tools | Out-Null
     $url = 'https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.zip'
     $archive = Join-Path (Get-Location) 'tools\apache-jmeter-5.6.3.zip'

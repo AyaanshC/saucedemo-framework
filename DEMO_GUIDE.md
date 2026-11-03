@@ -7,6 +7,8 @@ Internet, Chrome and Python are required for a fresh functional run; Java and JM
 ## 1. Explain the problem (one minute)
 
 "This framework verifies SauceDemo login, product/cart behavior and checkout against FR-01 to FR-16.
+The original 25 cases are supplemented by 132 app checks for product details, sorting, cart and
+checkout behavior, navigation, dynamic catalogs, and PDF downloading. The smoke demo stays at 12 cases.
 It also runs the required basic HTTP performance test. Assertions follow the written requirements,
 so a report can expose a product defect even when the framework itself is working."
 
@@ -77,7 +79,7 @@ explicitly. The Selenium tests provide the authenticated functional evidence."
 
 ## 6. Answer likely review questions
 
-- **Why a failing full suite?** It tests the written contract and records application discrepancies.
+- **Why a failing full suite?** It records written-contract discrepancies and separately tagged proposed acceptance gaps.
 - **Why is smoke green?** It selects core flows and supported input cases; regression adds invalid
   boundary partitions. Smoke alone is not the full FR-14 acceptance decision.
 - **Where is data-driven execution?** Login negatives and postal partitions are JSON-parametrized.
@@ -87,3 +89,16 @@ explicitly. The Selenium tests provide the authenticated functional evidence."
 - **Can another machine reproduce it?** Clone or extract, run setup, then use the commands in README.md.
 
 For presentation, keep README.md, the reports and this guide open before starting.
+
+## 7. Demonstrate the expanded coverage
+
+Use `docs/TEST_CASES.md` to explain the added checks and their limits. To run one area visibly:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/test_products.py --headed --slow-mo 2 --end-pause 3
+.\.venv\Scripts\python.exe -m pytest tests/test_dynamic_catalog.py --headed --slow-mo 2 --end-pause 3
+```
+
+For the full expanded headless run use `-m extended`. The three `proposed_contract` cases are proposed
+acceptance rules beyond the original brief. Whitespace postal rejection is FR-14. For the original
+25-case assignment run use `-m case_study`; the PDF does not require all 157 cases.

@@ -1,8 +1,9 @@
 from selenium.webdriver.common.by import By
-from .base_page import BasePage
+from selenium.webdriver.support.ui import Select
+from .app_page import AppPage
 
 
-class InventoryPage(BasePage):
+class InventoryPage(AppPage):
     def ready(self):
         self.path_is('/inventory.html')
         self.visible(self.testid('inventory-container'))
@@ -29,13 +30,22 @@ class InventoryPage(BasePage):
     def button_text(self, action, slug='sauce-labs-backpack'):
         return self.visible(self.testid(action + '-' + slug)).text
 
-    def badge_count(self):
-        badges = self.driver.find_elements(By.CSS_SELECTOR, '.shopping_cart_badge')
-        return int(badges[0].text) if badges else 0
+    def sort(self, value):
+        Select(self.visible(self.testid('product-sort-container'))).select_by_value(value)
+        self.pause_for_demo()
+        self.wait.until(lambda _: self.sort_value() == value)
 
-    def open_cart(self):
-        self.click((By.CSS_SELECTOR, '.shopping_cart_link'))
+    def sort_value(self):
+        return Select(self.visible(self.testid('product-sort-container'))).first_selected_option.get_attribute('value')
 
-    def logout(self):
-        self.click((By.ID, 'react-burger-menu-btn'))
-        self.click(self.testid('logout-sidebar-link'))
+    def catalog(self):
+        entries = []
+        for row in self.products():
+            image = row.find_element(By.TAG_NAME, 'img')
+            self.wait.until(lambda _: image.get_property('complete'))
+            entries.append(dict(name=row.find_element(*self.testid('inventory-item-name')).text,
+                                price=row.find_element(*self.testid('inventory-item-price')).text,
+                                description=row.find_element(*self.testid('inventory-item-desc')).text,
+                                image_src=image.get_attribute('src'), image_alt=image.get_attribute('alt'),
+                                image_loaded=image.get_property('naturalWidth') > 0))
+        return entries

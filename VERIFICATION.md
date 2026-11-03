@@ -4,6 +4,10 @@ These are executed results from the live application, not example or fabricated 
 This document records the historical run. Generated reports, screenshots, logs, JTL files, and
 dashboards are excluded from Git; the evidence paths below are local outputs. A fresh clone must
 run the suites to produce its own evidence, which may differ from these recorded results.
+These functional counts refer to the original 25-case suite. See
+[the expanded verification](docs/EXPANDED_VERIFICATION.md) for the later 157-case coverage.
+The latest assignment-focused rerun and corrected Products-document JMeter measurement are recorded
+in [CASE_STUDY_COMPLIANCE.md](docs/CASE_STUDY_COMPLIANCE.md); the old direct-route results below remain historical evidence.
 
 | Check | Result |
 |---|---|

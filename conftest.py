@@ -54,7 +54,9 @@ def driver_path(pytestconfig):
 
 
 @pytest.fixture
-def driver(pytestconfig, driver_path):
+def driver(pytestconfig, driver_path, tmp_path):
+    download_dir = tmp_path / 'downloads'
+    download_dir.mkdir()
     options = webdriver.ChromeOptions()
     headed = pytestconfig.getoption('--headed')
     if not headed:
@@ -65,17 +67,22 @@ def driver(pytestconfig, driver_path):
         'credentials_enable_service': False,
         'profile.password_manager_enabled': False,
         'profile.password_manager_leak_detection': False,
+        'download.default_directory': str(download_dir),
+        'download.prompt_for_download': False,
+        'plugins.always_open_pdf_externally': True,
     })
     browser = webdriver.Chrome(service=Service(driver_path), options=options)
     try:
         browser.set_page_load_timeout(45)
         browser._demo_step_delay = pytestconfig.getoption('--slow-mo') if headed else 0
+        browser._download_dir = download_dir
         yield browser
     finally:
         try:
             end_pause = pytestconfig.getoption('--end-pause') if headed else 0
             if end_pause:
                 log.info('DEMO keeping the final browser state visible for %s seconds', end_pause)
+                # Case-study sleep exception: let the audience inspect the result before Chrome closes.
                 time.sleep(end_pause)
         finally:
             browser.quit()
@@ -140,6 +147,9 @@ def pytest_runtest_makereport(item, call):
 
 
 def pytest_sessionfinish(session, exitstatus):
+    if session.config.option.collectonly:
+        # Inspecting coverage must not replace evidence from the last executed test session.
+        return
     data = {'started_utc': session.config._demo_start,
             'finished_utc': datetime.now(timezone.utc).isoformat(),
             'exit_code': int(exitstatus), 'results': session.config._demo_results}

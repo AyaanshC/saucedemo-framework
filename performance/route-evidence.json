@@ -1,0 +1,53 @@
+{
+  "checked_utc": "2026-11-03T18:15:21.646572+00:00",
+  "http": [
+    {
+      "requested_url": "https://www.saucedemo.com/",
+      "final_url": "https://www.saucedemo.com/",
+      "status": 200,
+      "has_app_root": true,
+      "is_spa_redirect": false
+    },
+    {
+      "requested_url": "https://www.saucedemo.com/inventory.html",
+      "final_url": "https://www.saucedemo.com/inventory.html",
+      "status": 404,
+      "has_app_root": false,
+      "is_spa_redirect": true
+    },
+    {
+      "requested_url": "https://www.saucedemo.com/?/inventory.html",
+      "final_url": "https://www.saucedemo.com/?/inventory.html",
+      "status": 200,
+      "has_app_root": true,
+      "is_spa_redirect": false
+    }
+  ],
+  "redirect_document": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <meta name=\"robots\" content=\"noindex\">\n    <title>Single Page Apps for GitHub Pages</title>\n    <script type=\"text/javascript\">\n      // Single Page Apps for GitHub Pages\n      // MIT License\n      // https://github.com/rafgraph/spa-github-pages\n      // This script takes the current url and converts the path and query\n      // string into just a query string, and then redirects the browser\n      // to the new url with only a query string and hash fragment,\n      // e.g. https://www.foo.tld/one/two?a=b&c=d#qwe, becomes\n      // https://www.foo.tld/?/one/two&a=b~and~c=d#qwe\n      // Note: this 404.html file must be at least 512 bytes for it to work\n      // with Internet Explorer (it is currently > 512 bytes)\n\n      // If you're creating a Project Pages site and NOT using a custom domain,\n      // then set pathSegmentsToKeep to 1 (enterprise users may need to set it to > 1).\n      // This way the code will only replace the route part of the path, and not\n      // the real directory in which the app resides, for example:\n      // https://username.github.io/repo-name/one/two?a=b&c=d#qwe becomes\n      // https://username.github.io/repo-name/?/one/two&a=b~and~c=d#qwe\n      // Otherwise, leave pathSegmentsToKeep as 0.\n      var pathSegmentsToKeep = 0;\n\n      var l = window.location;\n\n      // If the path is explicitly for storybook, don't touch it\n      if (l.pathname.indexOf('/storybook') !== 0) {\n        // Build origin\n        var origin = l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '');\n\n        // Split pathname into segments (skip leading empty segment from the leading slash)\n        var segments = l.pathname.split('/').filter(function (s) { return s.length > 0; });\n\n        // Keep the first `pathSegmentsToKeep` segments as the base (for project pages)\n        var baseSegments = segments.slice(0, pathSegmentsToKeep);\n        var routeSegments = segments.slice(pathSegmentsToKeep);\n\n        // Rebuild base path (leading slash only if there are base segments)\n        var base = baseSegments.length ? '/' + baseSegments.join('/') : '';\n\n        // Redirect when the pathname contains '/v1' (case-insensitive) per request\n        var containsV1 = l.pathname && l.pathname.toLowerCase().indexOf('/v1') !== -1;\n\n        if (containsV1) {\n          var redirectUrlRoot = origin + base + '/?/';\n          l.replace(redirectUrlRoot);\n        } else {\n          // No 'v1' found: proceed with the normal SPA redirect behavior\n          // Remove any exact 'v1' path segments just in case (no-op if none exist)\n          var filteredRouteSegments = routeSegments.filter(function (s) { return s !== 'v1'; });\n\n          // Encode route and original search by replacing & with ~and~ (keeps compatibility with SPA decoding)\n          var encodedRoute = filteredRouteSegments.join('/').replace(/&/g, '~and~');\n          var encodedSearch = l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '';\n          var hash = l.hash || '';\n\n          // Construct redirect URL. If there is no base (site root), base is '', so this becomes origin + '/?/'...\n          var redirectUrlFull = origin + base + '/?/' + encodedRoute + encodedSearch + hash;\n\n          l.replace(redirectUrlFull);\n        }\n      } else {\n        // Do not redirect storybook paths\n      }\n    </script>\n</head>\n<body>\n</body>\n</html>\n",
+  "browser_version": "156.0.8078.80",
+  "browser_direct_route": {
+    "displayed_url": "https://www.saucedemo.com/inventory.html",
+    "title": "Products",
+    "products": 6,
+    "navigation": [
+      {
+        "duration": 85.59999999403954,
+        "name": "https://www.saucedemo.com/?/inventory.html",
+        "responseStatus": 200
+      }
+    ]
+  },
+  "browser_bootstrap_route": {
+    "displayed_url": "https://www.saucedemo.com/inventory.html",
+    "title": "Products",
+    "products": 6,
+    "navigation": [
+      {
+        "duration": 22.200000017881393,
+        "name": "https://www.saucedemo.com/?/inventory.html",
+        "responseStatus": 200
+      }
+    ]
+  },
+  "verified": true
+}

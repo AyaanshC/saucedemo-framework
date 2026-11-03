@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import pytest
 
-pytestmark = pytest.mark.regression
+pytestmark = [pytest.mark.regression, pytest.mark.case_study]
 CASES = json.loads((Path(__file__).parents[1] / 'testdata/postal_cases.json').read_text())
 
 

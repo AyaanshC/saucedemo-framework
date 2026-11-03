@@ -16,6 +16,7 @@ reports/
 performance/results/
 performance/html_report/
 performance/history/
+dist/
 
 # Local secrets and editor/OS files
 .env

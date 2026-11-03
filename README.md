@@ -2,12 +2,29 @@
 
 A Python test automation framework using Selenium 4, pytest, and the Page Object Model for
 [SauceDemo](https://www.saucedemo.com/), built for **Automation Framework Case Study v1.0**.
-It contains **25 independent functional tests mapped to FR-01 through FR-16**, including a
-12-test smoke suite, plus an Apache JMeter HTTP performance plan.
+It contains **157 independent functional cases**: the original **25 cases mapped to FR-01 through
+FR-16** and **132 extended app checks**. The visible demo keeps its focused **12-test smoke suite**.
+An Apache JMeter HTTP performance plan is also included.
+
+## Assignment scope and case counts
+
+The PDF specifies requirements, not a fixed number of test cases. Its minimum is FR-01, FR-02,
+FR-07, FR-12, FR-14, FR-16 plus at least two additional requirements including negative/boundary
+coverage. The original 25 cases already exceed that minimum; the other 132 are optional extensions.
+Use `-m case_study` to run the original 25-case submission suite with `standard_user` as the valid
+shopping account. The 157-case default includes the extended checks. FR-05 has a documented
+observability limitation and carries `coverage_limited`; it is not needed to meet the minimum.
+
+See [SUBMISSION.md](SUBMISSION.md) for the hand-in package and
+[docs/CASE_STUDY_COMPLIANCE.md](docs/CASE_STUDY_COMPLIANCE.md) for requirement-by-requirement status.
 
 ## Features
 
-- Login, product catalog, cart, logout protection, and checkout coverage.
+- Login and advertised account authentication, recovery after errors, keyboard submission, and protected routes.
+- All six products, names/prices/descriptions/images, title/image/detail links, and four sorting modes.
+- Empty and multi-item carts, removal from inventory/details/cart, quantities, refresh persistence, and reset.
+- Checkout validation/recovery, cancellation, line items, subtotal/tax/total, repeat orders, and PDF download integrity.
+- Shared menus, footer link destinations, logout, lazy loading, spinner results, and slider controls/auto-advance.
 - JSON-driven negative login cases and postal-code equivalence and boundary partitions.
 - Reusable page objects, explicit waits, and a fresh Chrome session for every test.
 - Self-contained HTML reports, embedded failure screenshots, JUnit XML, logs, and JSON summaries.
@@ -18,7 +35,7 @@ It contains **25 independent functional tests mapped to FR-01 through FR-16**, i
 - Python 3.11+ and Google Chrome.
 - Internet access for dependency/driver downloads and tests against the live application.
 - Windows PowerShell for the supplied setup and demo scripts.
-- Java 8+ and Apache JMeter 5.6.3 for the optional performance suite.
+- Java 8+ and Apache JMeter 5.6.3 for the performance suite, which is mandatory for the assignment.
 
 The tests use SauceDemo's publicly documented demo credentials, `standard_user` / `secret_sauce`.
 
@@ -29,11 +46,14 @@ git clone https://github.com/AyaanshC/saucedemo-framework.git
 cd saucedemo-framework
 ```
 
+The current expansion and submission corrections are local and have not been committed or pushed.
+Use the evidence-inclusive submission ZIP for this exact version; the existing GitHub branch is older.
+
 Generated reports, virtual environments, downloaded drivers, and local tool installations are
 excluded from Git. Run the suites below to generate reports on your machine. Historical run
 summaries are recorded in [VERIFICATION.md](VERIFICATION.md), [docs/DEFECTS.md](docs/DEFECTS.md),
 and [performance/Findings.md](performance/Findings.md); their referenced raw artifacts are local
-outputs and are not bundled in this repository.
+outputs and are not bundled in Git. The submission ZIP built below includes the required evidence.
 
 ## Quickest demo on Windows
 
@@ -86,9 +106,19 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo.ps1 -StepDela
 # Headless smoke suite
 .\.venv\Scripts\python.exe -m pytest -m smoke --html=reports/smoke.html --junitxml=reports/smoke-junit.xml
 
-# Complete suite / all regression tests (same 25 tests)
+# Complete suite / all regression tests (157 cases)
 .\.venv\Scripts\python.exe -m pytest
 .\.venv\Scripts\python.exe -m pytest -m regression
+
+# Only the 132 added app checks
+.\.venv\Scripts\python.exe -m pytest -m extended
+
+# Original 25-case submission suite / proposed additional acceptance rules
+.\.venv\Scripts\python.exe -m pytest -m case_study
+.\.venv\Scripts\python.exe -m pytest -m proposed_contract
+
+# Broad regression without the three proposed acceptance-rule checks
+.\.venv\Scripts\python.exe -m pytest -m "not proposed_contract"
 
 # Full visible demo, report opens automatically
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo.ps1 -Suite full
@@ -131,8 +161,29 @@ in the full suite. The three failures check the case-study FR-14 contract: posta
 active. See [the defect notes](docs/DEFECTS.md) for reproduction steps; later live results may differ.
 
 The FR-05 username-length tests use unknown accounts, so generic login rejection alone cannot prove
-that a dedicated length validator exists. The performance plan measures direct HTTP responses;
-its Products-route limitation is described below. The original case-study PDF is not included.
+that a dedicated length validator exists. The performance plan measures HTTP document responses;
+its verified Products SPA bootstrap scope is described below. The original case-study PDF is not included.
+
+The original results above apply to the original 25-case suite. See
+[docs/TEST_CASES.md](docs/TEST_CASES.md) for the expanded coverage inventory and
+[docs/EXPANDED_VERIFICATION.md](docs/EXPANDED_VERIFICATION.md) for its executed results.
+
+Extended checks use `APP-*` traceability labels rather than inventing case-study requirement IDs.
+The catalog in `testdata/products.json`, 8% tax, payment/shipping labels, and external link targets
+are reviewable regression baselines observed on 3 November 2026. They are not additional claims
+about the original brief. Three `proposed_contract` cases ask whether an empty cart should be blocked
+from checkout and whether whitespace-only first/last names should be rejected. These proposed rules
+need product-owner agreement; they remain visible in the default run. The whitespace-only postal
+case is explicitly FR-14 because a postal code containing only spaces is not numeric.
+
+The PDF case checks that a completed order downloads a nonempty, complete PDF. It does not parse the
+receipt's contents. Footer and About URLs are checked without testing third-party websites. Alternate
+demo personas are checked for authentication only; the full shopping journey uses `standard_user`.
+Dynamic lazy loading intentionally repeats product/size variants, so tests check incremental growth
+and retained rows rather than assuming unique names or a finite catalog.
+
+This provides broad functional regression coverage, not exhaustive proof across every input,
+browser, screen size, accessibility requirement, backend security condition, or performance profile.
 
 ## Performance: JMeter 5.6.3
 
@@ -149,6 +200,11 @@ Or use an existing installation:
 .\.venv\Scripts\python.exe .\scripts\run_performance.py --jmeter-home C:\tools\apache-jmeter-5.6.3
 ```
 
+The runner checks PATH, JAVA_HOME and common Windows Java installation folders. To select an
+installation explicitly, add `--java "C:\path\to\java.exe"`.
+Use `--driver-path C:\tools\chromedriver.exe` when a managed driver is required. The runner first
+verifies the Products route in a single real Chrome session, closes Chrome, then starts JMeter.
+
 The default profile is **20 users, 60-second ramp, 180-second duration including ramp**, with
 250-500ms random think time before each request. The script uses JMeter CLI, not its GUI.
 It creates the actual JTL, aggregate CSV, full JMeter dashboard, and a threshold assessment:
@@ -161,6 +217,7 @@ It creates the actual JTL, aggregate CSV, full JMeter dashboard, and a threshold
 | Dashboard | `performance/html_report/index.html` |
 | NFR verdicts | `performance/Findings.md` |
 | Run parameters / JMeter log | `performance/results/` |
+| Browser route proof / machine-readable verdicts | `performance/results/route-evidence.json`, `performance/results/assessment.json` |
 
 Existing performance results and dashboard are moved together to `performance/history/<UTC timestamp>/`
 before a new run. Threshold violations return exit code 1. A short diagnostic run can be requested with
@@ -169,16 +226,37 @@ before a new run. Threshold violations return exit code 1. A short diagnostic ru
 
 ### What the performance measurements mean
 
-JMeter requests `/` and `/inventory.html` and checks HTTP 200 plus the React root marker. SauceDemo
-renders in JavaScript; in the recorded run its inventory URL returned HTTP 404 containing a JavaScript
-SPA redirect. JMeter does not execute that JavaScript or authenticate through the UI. Thus this plan
-measures the Products URL's direct HTTP response, which currently fails its success assertion.
-It does not measure authenticated rendered-product readiness. This limitation is included
-in the findings; authenticated business flows are verified by Selenium.
+JMeter requests `/` for Login and `/?/inventory.html` for the Products SPA bootstrap document,
+requiring **HTTP 200 plus the React root marker** for both. Real Chrome authenticates with the
+prescribed standard account and verifies that navigating to either `/inventory.html` or its
+bootstrap URL loads the HTTP 200 document `/?/inventory.html`, then shows Products with six items
+at `/inventory.html`. The route proof and the JTL's actual request URLs are retained with each run.
+
+This corrects the original direct-HTTP 404 measurement. The original results, findings, dashboard,
+and `saucedemo_direct_route_diagnostic.jmx` remain available for comparison. HTTP 404 responses are
+never relabelled as successful. The measured NFR-02 scope is **Products bootstrap-document HTTP
+response time**. It excludes the initial JavaScript redirect hop, authentication, assets and
+rendering, so it must not be presented as end-to-end browser readiness. This is the assignment's
+basic HTTP page-response interpretation; an evaluator requesting rendered readiness needs a
+separate browser-performance measurement, not these HTTP results.
 
 NFRs: Login P95 < 3000ms, Products P95 < 4000ms, overall error rate < 2%.
 The CSV assessment uses nearest-rank P95; JMeter's dashboard may use a slightly different percentile
 estimator. Run settings and actual observed concurrency are checked before assigning mandatory verdicts.
+
+## Build the evidence-inclusive submission
+
+After functional and performance execution:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\package_submission.py
+```
+
+This creates `dist/saucedemo-case-study-submission.zip` with source, documentation, HTML reports,
+screenshots/logs, raw JTL, aggregate CSV, findings, and the entire JMeter dashboard. It includes a
+SHA-256 file manifest and validates ZIP integrity. It excludes Git metadata, virtual environments,
+driver caches, downloaded tools and local environment files. Git ignore rules do not remove
+evidence from this explicit submission package.
 
 ## Framework structure
 

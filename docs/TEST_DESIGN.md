@@ -6,7 +6,8 @@ This is a framework demonstration, not a single end-to-end script. The deliverab
 page actions from assertions, handle asynchronous UI state, use external test data for at least two
 tests, select smoke versus regression runs, capture failures, log execution, and produce reports.
 The minimum functional set is FR-01, FR-02, FR-07, FR-12, FR-14 and FR-16 plus two additional
-requirements including a negative/boundary case. This implementation covers all 16 FRs in 25 cases.
+requirements including a negative/boundary case. The original suite represents all 16 FRs in
+25 cases. An additional 132 cases expand the live app's coverage; see TEST_CASES.md for the inventory.
 
 ## Equivalence partitioning (EP)
 
@@ -79,11 +80,27 @@ Paths below are relative to `tests/`. Every test also carries a machine-readable
 
 The default JMX runs 20 threads, a 60-second ramp and a 180-second scheduler window including ramp.
 Each loop makes Login and Products HTML GETs, with 250-500ms think time before each request.
+The current document routes are `/` and `/?/inventory.html`. A real Chrome preflight proves that
+the second URL is the actual HTTP 200 document used when authenticated navigation displays
+Products at `/inventory.html`; its evidence and JTL request URLs are saved. The old direct-route
+404 experiment is preserved in history. NFR-02 assesses the resolved document response, excluding
+the initial JavaScript redirect hop, authentication and rendered readiness.
 HTTP status and application root assertions avoid counting obvious error pages as successful samples.
 No browser asset rendering or authenticated transaction is claimed. The runner records actual data,
 qualifies the requested profile and computes strict NFR threshold verdicts in Findings.md.
 
 ## Scope limits
+
+Extended app checks carry APP-AUTH, APP-PRODUCTS, APP-CART, APP-CHECKOUT, APP-NAVIGATION, or
+APP-DYNAMIC labels. These identify tested app areas, not new numbered requirements in the brief.
+Product names/prices/descriptions and the 8% USD tax calculation are observed, reviewable regression
+baselines. Empty-cart checkout and whitespace-only first/last-name rejection are three proposed
+contracts, tagged `proposed_contract`. Whitespace-only postal codes are non-numeric and therefore
+map directly to FR-14, including in the extended test's requirement marker.
+PDF testing covers download integrity, not parsed receipt contents. Dynamic lazy loading is tested
+as a repeating feed without an invented last page. Third-party destination pages, all downstream
+behaviors of deliberately buggy demo personas, cross-browser/mobile, accessibility, and security
+assessments remain outside this functional suite.
 
 Coverage means an automated observable check exists; it is not a claim that the site implements every
 business rule correctly. FR-05 has an observability limitation. FR-14 may expose an AUT/specification

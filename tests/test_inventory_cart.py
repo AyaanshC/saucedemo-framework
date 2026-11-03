@@ -2,7 +2,7 @@ import pytest
 from pages.cart_page import CartPage
 from pages.login_page import LoginPage
 
-pytestmark = pytest.mark.regression
+pytestmark = [pytest.mark.regression, pytest.mark.case_study]
 
 
 @pytest.mark.requirement('FR-06')

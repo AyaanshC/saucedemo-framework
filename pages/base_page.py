@@ -23,6 +23,7 @@ class BasePage:
         """Give viewers time to follow an action; explicit waits still check readiness."""
         delay = getattr(self.driver, '_demo_step_delay', 0)
         if delay:
+            # Case-study sleep exception: opt-in presentation pacing, never a readiness check.
             time.sleep(delay)
 
     def open(self, path='/'):

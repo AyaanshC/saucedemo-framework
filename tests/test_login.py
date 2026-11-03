@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from pages.inventory_page import InventoryPage
 
-pytestmark = pytest.mark.regression
+pytestmark = [pytest.mark.regression, pytest.mark.case_study]
 CASES = json.loads((Path(__file__).parents[1] / 'testdata/login_cases.json').read_text())
 
 
@@ -24,6 +24,7 @@ def test_rejected_login(login, driver, case):
 
 
 @pytest.mark.requirement('FR-05')
+@pytest.mark.coverage_limited
 @pytest.mark.parametrize('length', [29, 30, 31], ids=['below-30', 'at-30', 'above-30'])
 def test_username_length_boundary(login, length):
     # All values are unknown accounts; rejection does NOT prove a length validator.
