@@ -1,0 +1,6 @@
+[
+  {"id":"invalid-password","requirement":"FR-02","username":"standard_user","password":"wrong_password","error":"Username and password do not match"},
+  {"id":"blank-username","requirement":"FR-03","username":"","password":"secret_sauce","error":"Username is required"},
+  {"id":"blank-password","requirement":"FR-04","username":"standard_user","password":"","error":"Password is required"},
+  {"id":"both-blank","requirement":"FR-03","username":"","password":"","error":"Username is required"}
+]

@@ -1,0 +1,7 @@
+[
+  {"id":"four-digits-invalid","postal":"1234","expected":"error","technique":"BVA lower boundary minus one"},
+  {"id":"five-digits-valid","postal":"12345","expected":"overview","technique":"BVA lower boundary"},
+  {"id":"six-digits-valid","postal":"123456","expected":"overview","technique":"BVA specified valid length"},
+  {"id":"alphabetic-invalid","postal":"ABCDE","expected":"error","technique":"EP non-numeric partition"},
+  {"id":"mixed-invalid","postal":"12A45","expected":"error","technique":"EP mixed partition"}
+]

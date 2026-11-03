@@ -1,0 +1,27 @@
+# Local environments and downloaded tools
+.venv/
+venv/
+.wdm/
+tools/
+
+# Python and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Generated execution artifacts
+reports/
+performance/results/
+performance/html_report/
+performance/history/
+
+# Local secrets and editor/OS files
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
