@@ -14,6 +14,7 @@ REPORTS = ['smoke.html', 'smoke-junit.xml', 'functional.html', 'junit.xml',
            'expanded-initial.html', 'expanded-initial.xml', 'dynamic-check.html', 'dynamic-check.xml',
            'expanded-combined.xml', 'expanded-summary.json', 'expanded-demo-check.html', 'expanded-demo-check.xml',
            'coverage-map.json',
+           'submission-dashboard-preview.png', 'dashboard-validation.json',
            'slider-demo-check.html', 'slider-demo-check.xml']
 REQUIRED = SOURCE_FILES + [
     'docs/CASE_STUDY_COMPLIANCE.md', 'performance/jmx/saucedemo_weekend_lab.jmx',
@@ -59,6 +60,8 @@ def build():
         for name in REQUIRED:
             assert 'saucedemo-framework/' + name in archive.namelist(), name
     temporary.replace(output)
+    digest = hashlib.sha256(output.read_bytes()).hexdigest()
+    output.with_suffix('.zip.sha256').write_text(f'{digest}  {output.name}\n', encoding='ascii')
     print(f'Created {output}\nFiles: {len(files) + 1}\nBytes: {output.stat().st_size}')
     print('Performance verdicts:', assessment['verdicts'])
     return output

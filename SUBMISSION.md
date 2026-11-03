@@ -1,5 +1,10 @@
 # Case-study submission
 
+Download the [verified source-and-evidence ZIP](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/saucedemo-case-study-submission.zip)
+and [checksum](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/saucedemo-case-study-submission.zip.sha256)
+from the [v1.0.0 release](https://github.com/AyaanshC/saucedemo-framework/releases/tag/v1.0.0).
+Use this asset for submission; GitHub's automatic source-code archive excludes generated evidence.
+
 ## Which tests are required?
 
 There are **157 total cases**, not 157 extra cases. The original **25 case-study cases** implement

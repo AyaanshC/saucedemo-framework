@@ -6,6 +6,27 @@ It contains **157 independent functional cases**: the original **25 cases mapped
 FR-16** and **132 extended app checks**. The visible demo keeps its focused **12-test smoke suite**.
 An Apache JMeter HTTP performance plan is also included.
 
+## Download the verified submission
+
+[Download the complete submission ZIP](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/saucedemo-case-study-submission.zip)
+and its [SHA-256 checksum](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/saucedemo-case-study-submission.zip.sha256)
+from the [v1.0.0 release](https://github.com/AyaanshC/saucedemo-framework/releases/tag/v1.0.0).
+The ZIP contains source and the required reports, screenshots, raw JMeter results, aggregate CSV,
+and complete dashboard. GitHub's automatic source-code ZIP contains source only.
+
+Recorded verification (3 November 2026):
+
+| Check | Result |
+|---|---|
+| Smoke suite | 12 passed |
+| Original case-study suite | 22 passed, 3 FR-14 failures |
+| Expanded suite | 150 passed, 7 failures across 157 unique cases |
+| Required JMeter profile | 20 users, 60s ramp, 180s duration; 6,715 samples |
+| HTTP document NFRs | Login P95 228 ms; Products bootstrap P95 223 ms; errors 0.9978% — all three thresholds passed |
+
+Functional failures are retained and explained in [the defect notes](docs/DEFECTS.md). The Products
+performance figure measures the verified SPA bootstrap document, excluding authentication and rendering.
+
 ## Assignment scope and case counts
 
 The PDF specifies requirements, not a fixed number of test cases. Its minimum is FR-01, FR-02,
@@ -46,8 +67,8 @@ git clone https://github.com/AyaanshC/saucedemo-framework.git
 cd saucedemo-framework
 ```
 
-The current expansion and submission corrections are local and have not been committed or pushed.
-Use the evidence-inclusive submission ZIP for this exact version; the existing GitHub branch is older.
+Use the release ZIP for the verified source snapshot and execution evidence. Generated outputs stay
+out of Git; individual evidence downloads are linked from the verification documents.
 
 Generated reports, virtual environments, downloaded drivers, and local tool installations are
 excluded from Git. Run the suites below to generate reports on your machine. Historical run
@@ -251,6 +272,9 @@ After functional and performance execution:
 ```powershell
 .\.venv\Scripts\python.exe .\scripts\package_submission.py
 ```
+
+Use `scripts/collect_coverage.py` to regenerate `reports/coverage-map.json` from actual pytest
+collection and verify the case counts and requirement markers without executing browser tests.
 
 This creates `dist/saucedemo-case-study-submission.zip` with source, documentation, HTML reports,
 screenshots/logs, raw JTL, aggregate CSV, findings, and the entire JMeter dashboard. It includes a

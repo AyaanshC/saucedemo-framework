@@ -1,5 +1,9 @@
 # Case-study compliance and submission scope
 
+Evidence links download the recorded files from the v1.0.0 release. For offline viewing, extract
+the complete submission ZIP and open the corresponding files under `reports/` or
+`performance/results/`; keep the dashboard folder intact.
+
 This maps the supplied Automation Framework Case Study v1.0 (five-page PDF) to the local code and
 evidence. It distinguishes implemented automation, observed app discrepancies, and limitations.
 
@@ -60,5 +64,35 @@ three FR-14 discrepancies. See `DEFECTS.md` for reproduction and `EXPANDED_VERIF
 
 ## Latest verification
 
-The final executed case-study, classification and mandatory JMeter results are recorded here
-after validation and are also included as raw evidence in the package.
+Actual executed results from this local session:
+
+| Check | Result | Evidence |
+|---|---|---|
+| Original assignment suite | 25 executed; 22 passed, 3 FR-14 assertion failures; 0 errors | [HTML](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/case-study.html), [JUnit](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/case-study-junit.xml) |
+| Whitespace classification recheck | 3 reproduced failures; postal is FR-14, first/last are proposed | [HTML](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/classification-check.html), [coverage map](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/coverage-map.json) |
+| Scope counts | 157 total = 25 original + 132 extended; smoke 12, proposed 3, limited 3 | [Actual collection](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/coverage-map.json) |
+| JMeter mandatory profile | 20 users; 60s ramp; 180s duration; observed peak 20; 6715 samples; 179.51s sample window | [Metadata](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/run-metadata.json), [raw JTL](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/results.jtl) |
+| NFR-01 | PASS: Login document P95 228 ms < 3000 ms | [Findings](../performance/Findings.md) |
+| NFR-02 | PASS: verified Products bootstrap-document P95 223 ms < 4000 ms | [Route proof](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/route-evidence.json), [Findings](../performance/Findings.md) |
+| NFR-03 | PASS: 0.9978% overall errors < 2% | [Assessment](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/assessment.json) |
+| Diagnostic qualification control | 1-user/10s run correctly NOT QUALIFIED; its evidence is preserved in history | `performance/history/` |
+| Measurement guard controls | Temporary copies with missing route proof or Products replaced by Login are rejected as NOT QUALIFIED | Analyzer control checks; production results unchanged |
+| Default Java discovery | Finds installed Temurin Java 8 without modifying PATH | `resolve_java` helper verified |
+| Dashboard visual check | Both sampler rows render; zero severe browser-console errors | [Preview](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/submission-dashboard-preview.png), [validation](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/dashboard-validation.json) |
+| Source checks | Python parses; PowerShell setup parses; Git whitespace check passes | Source validation |
+
+The mandatory run retained all **67 connection-reset errors** (62 SSL exceptions and 5 socket
+exceptions) in the raw JTL and error-rate calculation. There were no HTTP 404 samples in the new
+load run. Errors were not removed or retried to produce a passing rate. The measured error rate
+is below the specified 2% threshold. P95 uses nearest rank; the dashboard's percentile estimator
+has slightly different displayed decimals.
+
+The core functional failures remain active because the application accepts postal inputs that
+contradict FR-14. The framework and submission do not claim the external application is defect-free.
+Latest extended-suite history is recorded separately in `EXPANDED_VERIFICATION.md`.
+
+The package script validates required evidence, ZIP integrity and source/evidence hashes. An
+extracted-copy collection check verifies portability of the test layout. Local tools/environments
+are excluded and must be reconstructed using setup on the recipient's machine. Packaging and
+verification do not invoke Git publication; the manifest identifies the exact working files included.
+The actual class/demo presentation remains the student's step.

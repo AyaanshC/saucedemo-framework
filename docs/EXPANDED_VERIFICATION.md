@@ -1,5 +1,9 @@
 # Expanded suite verification — 3 November 2026
 
+Evidence links download the recorded files from the v1.0.0 release. For offline viewing, extract
+the complete submission ZIP and open the corresponding files under `reports/` or
+`performance/results/`; keep the dashboard folder intact.
+
 Executed against the live SauceDemo app in Chrome. These are actual results, not example data.
 
 ## Result
@@ -18,11 +22,11 @@ Coverage was executed in two headless batches while the dynamic-catalog cases we
 
 | Batch | Cases | Passed | Failed | Elapsed seconds | Report |
 |---|---:|---:|---:|---:|---|
-| expanded-initial | 139 | 132 | 7 | 882.52 | [HTML](../reports/expanded-initial.html), [JUnit](../reports/expanded-initial.xml) |
-| dynamic-check | 18 | 18 | 0 | 148.87 | [HTML](../reports/dynamic-check.html), [JUnit](../reports/dynamic-check.xml) |
+| expanded-initial | 139 | 132 | 7 | 882.52 | [HTML](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/expanded-initial.html), [JUnit](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/expanded-initial.xml) |
+| dynamic-check | 18 | 18 | 0 | 148.87 | [HTML](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/dynamic-check.html), [JUnit](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/dynamic-check.xml) |
 
-- [Combined JUnit](../reports/expanded-combined.xml)
-- [Combined per-case JSON summary](../reports/expanded-summary.json)
+- [Combined JUnit](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/expanded-combined.xml)
+- [Combined per-case JSON summary](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/expanded-summary.json)
 - Separate logs: `reports/logs/expanded-initial.log`, `reports/logs/dynamic-check.log`.
 - Failure screenshots: `reports/screenshots/`, also embedded in the main HTML report.
 
@@ -41,9 +45,9 @@ The three proposed rules carry the `proposed_contract` marker and require produc
 
 ## Additional validation
 
-- Four sorting cases passed in visible Chrome with `--slow-mo 2 --end-pause 1` ([headed report](../reports/expanded-demo-check.html)). That report also contains an initial carousel-test timing failure.
+- Four sorting cases passed in visible Chrome with `--slow-mo 2 --end-pause 1` ([headed report](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/expanded-demo-check.html)). That report also contains an initial carousel-test timing failure.
 - The initial headed carousel failure came from separate DOM reads straddling automatic rotation. The test was corrected to capture product content and active-dot metadata in one browser snapshot.
-- Both final slider-control and automatic-advance checks then passed in visible Chrome at the slower pace ([corrected slider report](../reports/slider-demo-check.html), [JUnit](../reports/slider-demo-check.xml)).
+- Both final slider-control and automatic-advance checks then passed in visible Chrome at the slower pace ([corrected slider report](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/slider-demo-check.html), [JUnit](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/slider-demo-check.xml)).
 - The final sorting assertions were exercised in the headed run; the corrected slider implementation was exercised in the final focused run. Focused rechecks are not added again to the 157 unique-case total.
 - All Python sources parse; pytest collects 157 cases and the unchanged 12-case smoke subset; Git whitespace checks pass.
 - No package additions were required. Downloaded PDFs use per-test temporary directories. Receipt testing checks PDF download integrity, not parsed receipt contents.
@@ -53,4 +57,5 @@ The three proposed rules carry the `proposed_contract` marker and require produc
 
 The expanded inventory is in [TEST_CASES.md](TEST_CASES.md). Catalog data, 8% tax, payment/shipping labels and link destinations are observed regression baselines. Cross-browser/device coverage, accessibility audits, backend/security assessments, parsed PDF receipt content, and full journeys for deliberately buggy alternate personas remain outside this suite.
 
-All expansion changes are local and uncommitted. No push was performed.
+This document records executed testing, independently of Git publication. Use the submission ZIP
+and its file manifest to identify the exact packaged source and evidence.
