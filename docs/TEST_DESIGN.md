@@ -71,7 +71,9 @@ Paths below are relative to `tests/`. Every test also carries a machine-readable
   immediately with a descriptive assertion instead of a misleading timeout.
 - A pytest hook saves original PNG evidence and embeds it into the self-contained HTML report.
 - Execution logs record START, STEP and STATUS without writing entered field values.
-- No blanket sleeps, retry-to-green strategy or expected-failure markers conceal defects.
+- Explicit waits check readiness. Optional headed-demo pauses let viewers follow actions and inspect
+  the final screen; normal runs have no presentation delay. No retry-to-green strategy or
+  expected-failure markers conceal defects.
 
 ## Performance design
 

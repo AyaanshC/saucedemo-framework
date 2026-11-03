@@ -1,8 +1,10 @@
 import base64
 import json
 import logging
+import math
 import os
 import re
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -23,11 +25,19 @@ log = logging.getLogger('framework')
 
 def pytest_addoption(parser):
     parser.addoption('--headed', action='store_true', help='Show Chrome for the live demo')
+    parser.addoption('--slow-mo', type=float, default=0,
+                     help='Presentation pause in seconds after each action in headed Chrome (default: 0)')
+    parser.addoption('--end-pause', type=float, default=0,
+                     help='Keep the final browser state visible for this many seconds in headed Chrome (default: 0)')
     parser.addoption('--base-url', default='https://www.saucedemo.com')
     parser.addoption('--driver-path', default=os.getenv('CHROMEDRIVER_PATH'))
 
 
 def pytest_configure(config):
+    for option in ('--slow-mo', '--end-pause'):
+        value = config.getoption(option)
+        if not math.isfinite(value) or value < 0:
+            raise pytest.UsageError(f'{option} must be a finite, non-negative number of seconds')
     for folder in ['reports/screenshots', 'reports/logs']:
         (ROOT / folder).mkdir(parents=True, exist_ok=True)
     config._demo_results = []
@@ -46,7 +56,8 @@ def driver_path(pytestconfig):
 @pytest.fixture
 def driver(pytestconfig, driver_path):
     options = webdriver.ChromeOptions()
-    if not pytestconfig.getoption('--headed'):
+    headed = pytestconfig.getoption('--headed')
+    if not headed:
         options.add_argument('--headless=new')
     options.add_argument('--window-size=1440,1000')
     options.add_argument('--disable-search-engine-choice-screen')
@@ -56,9 +67,18 @@ def driver(pytestconfig, driver_path):
         'profile.password_manager_leak_detection': False,
     })
     browser = webdriver.Chrome(service=Service(driver_path), options=options)
-    browser.set_page_load_timeout(45)
-    yield browser
-    browser.quit()
+    try:
+        browser.set_page_load_timeout(45)
+        browser._demo_step_delay = pytestconfig.getoption('--slow-mo') if headed else 0
+        yield browser
+    finally:
+        try:
+            end_pause = pytestconfig.getoption('--end-pause') if headed else 0
+            if end_pause:
+                log.info('DEMO keeping the final browser state visible for %s seconds', end_pause)
+                time.sleep(end_pause)
+        finally:
+            browser.quit()
 
 
 @pytest.fixture

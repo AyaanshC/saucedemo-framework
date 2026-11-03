@@ -1,6 +1,6 @@
 # Presenting the working demo
 
-Allow about 8-10 minutes plus first-time downloads. Generate reports before presenting a Git clone;
+Allow extra presentation time for the pauses between actions, plus first-time downloads. Generate reports before presenting a Git clone;
 the repository excludes generated HTML, screenshots, logs, raw results, and dashboards.
 Internet, Chrome and Python are required for a fresh functional run; Java and JMeter for performance.
 
@@ -20,7 +20,7 @@ Open `pages/checkout_page.py`, `tests/test_checkout.py` and `testdata/postal_cas
 the input partitions, so adding another data row creates another case without copying the test.
 Explicit waits synchronize with page state. Every case starts with a clean browser."
 
-## 3. Run the visible smoke demo (roughly two minutes)
+## 3. Run the visible smoke demo
 
 Double-click `START_DEMO.cmd`, or run:
 
@@ -30,6 +30,15 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts\demo.ps1
 
 Chrome opens repeatedly because each test is independent. Explain the console's test names and step
 logs while login, validation, cart and checkout flows run. The report opens at the end.
+The default demo pauses 2 seconds after each navigation, click, and field entry, and 3 seconds on
+each final screen before closing that test's browser. To give yourself more explanation time, use:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\demo.ps1 -StepDelay 3 -EndPause 5
+```
+
+Use `-StepDelay 0 -EndPause 0` for a full-speed visible demo. Direct pytest runs remain full speed
+unless `--headed --slow-mo 2 --end-pause 3` is supplied; headless runs ignore the presentation pauses.
 Highlight the passing order flow, invalid-password rejection, and required first-name validation.
 
 ## 4. Demonstrate finding a real requirement mismatch (one minute)

@@ -40,7 +40,9 @@ outputs and are not bundled in this repository.
 1. Clone this repository or extract its ZIP to a writable folder.
 2. Have Python 3.11+ and Google Chrome installed, with internet access.
 3. Double-click **START_DEMO.cmd**. It sets up a local `.venv` on first use, shows Chrome running
-   the 12 smoke tests, and opens the HTML report when finished. The console remains open.
+   the 12 smoke tests at a presentation pace, and opens the HTML report when finished. It pauses
+   **2 seconds after each navigation, click, and field entry**, and keeps each test's final screen
+   visible for **3 seconds** before closing Chrome. The console remains open.
 
 The smoke subset includes positive and negative flows. The full suite additionally tests invalid
 postal codes against the case study's expected behavior. Application defects must appear as failures.
@@ -75,6 +77,12 @@ If downloads are blocked, provide a ChromeDriver matching your installed Chrome:
 # Visible Chrome, smoke suite, report opens automatically
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo.ps1
 
+# Slower presentation, with more time to explain each step
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo.ps1 -StepDelay 3 -EndPause 5
+
+# Visible demo at full speed
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo.ps1 -StepDelay 0 -EndPause 0
+
 # Headless smoke suite
 .\.venv\Scripts\python.exe -m pytest -m smoke --html=reports/smoke.html --junitxml=reports/smoke-junit.xml
 
@@ -87,10 +95,16 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo.ps1 -Suite fu
 
 # Isolate the case-study postal-code contract
 .\.venv\Scripts\python.exe -m pytest tests/test_checkout.py -k postal_code_contract --headed
+
+# Present a single order flow slowly
+.\.venv\Scripts\python.exe -m pytest tests/test_checkout.py::test_finish_order --headed --slow-mo 2 --end-pause 3
 ```
 
 Default is headless unless `--headed` is provided. Each test gets a fresh Chrome session so tests
-do not depend on execution order. No hard-coded sleeps are used. Synchronization uses explicit waits.
+do not depend on execution order. Synchronization uses explicit waits. The optional presentation
+pauses help viewers follow actions; they do not replace readiness checks. Direct pytest runs have
+no presentation delay by default, and headless execution ignores presentation pauses. Delay values
+must be finite, non-negative seconds. Slower presentation runs take longer to complete.
 Exit code 0 means the selected tests passed; 1 means assertions failed; setup errors appear as errors.
 The expected live-site contract discrepancies are documented in **docs/DEFECTS.md** after verification.
 
