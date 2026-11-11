@@ -6,23 +6,26 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_FILES = ['README.md', 'DEMO_GUIDE.md', 'VERIFICATION.md', 'SUBMISSION.md',
-                'START_DEMO.cmd', 'conftest.py', 'pytest.ini', 'requirements.txt',
+                'START_DEMO.cmd', 'OPEN_DASHBOARD.cmd', 'conftest.py', 'pytest.ini', 'requirements.txt',
                 'requirements-lock.txt', '.gitignore', '.gitattributes']
-TREES = ['pages', 'tests', 'testdata', 'scripts', 'docs', 'performance']
+TREES = ['pages', 'tests', 'testdata', 'scripts', 'docs', 'performance', 'dashboard']
 REPORTS = ['smoke.html', 'smoke-junit.xml', 'functional.html', 'junit.xml',
            'case-study.html', 'case-study-junit.xml', 'classification-check.html', 'classification-check.xml',
            'expanded-initial.html', 'expanded-initial.xml', 'dynamic-check.html', 'dynamic-check.xml',
            'expanded-combined.xml', 'expanded-summary.json', 'expanded-demo-check.html', 'expanded-demo-check.xml',
            'coverage-map.json',
            'submission-dashboard-preview.png', 'dashboard-validation.json',
-           'slider-demo-check.html', 'slider-demo-check.xml']
+           'slider-demo-check.html', 'slider-demo-check.xml',
+           'team-core-check.html', 'team-core-check.xml', 'team-scope-verification.json',
+           'dashboard.html', 'presentation-dashboard-validation.json']
+OPTIONAL_ARTIFACTS = ['output/pdf/six-person-work-plan-and-results.pdf']
 REQUIRED = SOURCE_FILES + [
     'docs/CASE_STUDY_COMPLIANCE.md', 'performance/jmx/saucedemo_weekend_lab.jmx',
     'performance/results/results.jtl', 'performance/results/aggregate.csv',
     'performance/results/run-metadata.json', 'performance/results/route-evidence.json',
     'performance/results/assessment.json', 'performance/html_report/index.html',
     'performance/Findings.md', 'reports/case-study.html', 'reports/case-study-junit.xml',
-    'reports/expanded-summary.json', 'reports/logs/case-study.log',
+    'reports/logs/case-study.log',
     'reports/coverage-map.json',
 ]
 
@@ -40,6 +43,7 @@ def build():
                      and '__pycache__' not in path.parts and path.suffix not in {'.pyc', '.pyo'}
                      and not path.name.startswith('.env') and not path.is_symlink())
     files.update(ROOT / 'reports' / name for name in REPORTS if (ROOT / 'reports' / name).is_file())
+    files.update(ROOT / name for name in OPTIONAL_ARTIFACTS if (ROOT / name).is_file())
     # Use an explicit allowlist. Never include .git, environments, drivers, tools, or local .env files.
     for path in files:
         path.resolve().relative_to(ROOT)

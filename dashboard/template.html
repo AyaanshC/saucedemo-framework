@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SauceDemo | Test dashboard</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23076f73'/%3E%3Cpath d='m8 16 5 5 11-11' fill='none' stroke='white' stroke-width='3'/%3E%3C/svg%3E">
+  <style>
+    :root { color-scheme:light; --ink:#152e40; --muted:#566b7c; --teal:#076f73; --line:#dce5eb; --surface:#fff; --bg:#f4f7fa; --pass:#1a704e; --fail:#a52f3d; --error:#82530a; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.55 "Segoe UI",Arial,sans-serif; }
+    a { color:var(--teal); text-underline-offset:3px; }
+    a:focus-visible,button:focus-visible,summary:focus-visible { outline:3px solid #298aaf; outline-offset:4px; }
+    .wrap { max-width:1200px; margin:auto; padding:0 32px; }
+    .topbar { background:var(--ink); color:white; }
+    .topbar .wrap { min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .brand { font-size:19px; font-weight:700; letter-spacing:-.4px; }
+    .brand span { margin-left:12px; padding-left:12px; border-left:1px solid #658091; color:#cadbe6; font-size:13px; font-weight:400; }
+    .recorded-label { font-size:12px; letter-spacing:.07em; text-transform:uppercase; color:#cadbe6; }
+    main { padding-top:38px!important; padding-bottom:44px!important; }
+    .hero { display:flex; align-items:flex-start; justify-content:space-between; gap:26px; margin-bottom:23px; }
+    .eyebrow { text-transform:uppercase; font-size:11px; font-weight:700; letter-spacing:.13em; color:var(--teal); margin:0 0 7px; }
+    h1 { margin:0 0 8px; font-size:34px; line-height:1.15; letter-spacing:-1px; }
+    h2 { margin:0; font-size:18px; letter-spacing:-.25px; }
+    h3 { margin:0; font-size:14px; }
+    p { margin:0; }
+    .muted { color:var(--muted); }
+    .snapshot { max-width:680px; font-size:13px; color:var(--muted); margin-top:10px; }
+    .actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:9px; padding-top:22px; }
+    .button { display:inline-flex; align-items:center; justify-content:center; border:1px solid #c5d4df; border-radius:7px; padding:10px 14px; background:white; color:var(--ink); text-decoration:none; font-size:12px; font-weight:600; white-space:nowrap; }
+    .button:hover { background:#eaf0f5; }
+    .button.primary { color:white; background:var(--teal); border-color:var(--teal); }
+    .button.primary:hover { background:#055b5f; }
+    .disabled { opacity:.65; cursor:default; }
+    .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-bottom:22px; }
+    .metric { background:var(--surface); border:1px solid var(--line); border-radius:9px; padding:18px 22px; }
+    .metric-label { color:var(--muted); font-size:12px; font-weight:600; }
+    .metric-value { font-size:36px; line-height:1.2; font-weight:650; letter-spacing:-1px; margin:7px 0; }
+    .metric small { font-size:12px; color:var(--muted); }
+    .metric.good .metric-value { color:var(--pass); }
+    .metric.bad .metric-value { color:var(--fail); }
+    .panel { background:var(--surface); border:1px solid var(--line); border-radius:9px; margin-bottom:22px; overflow:hidden; }
+    .panel-head { padding:20px 22px 17px; display:flex; gap:16px; align-items:center; justify-content:space-between; }
+    .panel-head p { color:var(--muted); font-size:12px; margin-top:4px; }
+    .badge { display:inline-flex; align-items:center; padding:4px 8px; border-radius:5px; font-size:11px; font-weight:650; white-space:nowrap; }
+    .badge.passed { background:#e9f4ed; color:var(--pass); }
+    .badge.failed { background:#fbecee; color:var(--fail); }
+    .badge.error { background:#fff2d9; color:var(--error); }
+    .badge.skipped,.badge.not-run { background:#edf1f5; color:#506372; }
+    .outcomes { padding:0 22px 19px; }
+    .bar { display:flex; height:9px; overflow:hidden; border-radius:10px; background:#e8edf2; }
+    .bar .passed { background:#2c8b66; }.bar .failed { background:#ba4654; }.bar .error { background:#c78a28; }.bar .skipped { background:#8797a5; }
+    .legend { margin-top:9px; color:var(--muted); font-size:12px; }
+    .table-scroll { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; text-align:left; font-size:13px; }
+    th,td { padding:13px 22px; border-top:1px solid var(--line); vertical-align:top; }
+    thead { background:#f7f9fb; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
+    tbody th { font-weight:600; white-space:nowrap; }
+    td small { display:block; color:var(--muted); font-size:11px; margin-top:3px; }
+    .team-note { padding:12px 22px; color:var(--muted); font-size:12px; border-top:1px solid var(--line); background:#fbfcfd; }
+    .performance { padding:0 22px 21px; display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .nfr { padding:16px; border:1px solid var(--line); border-radius:7px; }
+    .nfr-label { color:var(--muted); font-size:12px; }
+    .nfr-value { font-size:27px; font-weight:650; letter-spacing:-.6px; margin:9px 0 12px; }
+    .nfr-bottom { display:flex; gap:10px; align-items:center; justify-content:space-between; font-size:11px; color:var(--muted); }
+    .performance-note { padding:0 22px 20px; color:var(--muted); font-size:12px; }
+    .performance-note strong { color:var(--ink); font-weight:600; }
+    .filters { display:flex; gap:5px; }
+    .filter-button { border:1px solid var(--line); border-radius:6px; color:var(--muted); background:white; padding:7px 10px; font:600 11px "Segoe UI",Arial,sans-serif; cursor:pointer; }
+    .filter-button[aria-pressed="true"] { background:var(--ink); border-color:var(--ink); color:white; }
+    .test-table { min-width:780px; table-layout:fixed; }
+    .test-table th:first-child { width:43%; }.test-table th:nth-child(2) { width:16%; }.test-table th:nth-child(3) { width:12%; }.test-table th:nth-child(4) { width:11%; }
+    .test-table td,.test-table th { padding:13px 15px; }
+    .test-table strong { font-weight:600; font-size:12px; overflow-wrap:anywhere; }
+    .node { font-family:Consolas,monospace; font-size:10px!important; overflow-wrap:anywhere; line-height:1.55; }
+    .text-link { font-size:12px; font-weight:600; }
+    details { margin-top:5px; font-size:11px; }
+    summary { color:var(--muted); cursor:pointer; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; font:10px/1.6 Consolas,monospace; padding:10px; background:#f6f8fa; border:1px solid var(--line); border-radius:5px; max-height:230px; overflow:auto; }
+    details[open] { position:relative; } details[open] pre { width:300px; max-width:100%; }
+    .table-foot { padding:12px 22px; font-size:12px; color:var(--muted); border-top:1px solid var(--line); }
+    .empty td { padding:24px; color:var(--muted); }
+    tr[hidden] { display:none; }
+    footer { display:flex; justify-content:space-between; gap:18px; color:var(--muted); font-size:11px; }
+    @media(max-width:900px) { .hero { flex-direction:column; }.actions { padding-top:0; justify-content:flex-start; }.performance { grid-template-columns:1fr; }.nfr-value { margin:4px 0; }.panel-head { align-items:flex-start; } }
+    @media(max-width:600px) { .wrap { padding:0 18px; }main { padding-top:25px!important; }.brand span,.recorded-label { display:none; }h1 { font-size:28px; }.metrics { grid-template-columns:repeat(2,1fr); gap:10px; }.metric { padding:14px; }.metric-value { font-size:30px; }.panel-head { flex-direction:column; }th,td { padding:11px 14px; }footer { flex-direction:column; gap:4px; }.badge { white-space:normal; }.team-table { min-width:650px; } }
+    @media print { .actions,.filters { display:none; }body { background:white; }.wrap { max-width:none; padding:0; }.panel { break-inside:avoid; }.test-table { min-width:0; }tr[hidden] { display:table-row; } }
+  .control-row {display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}.control-row strong {min-width:160px}.control-row button {cursor:pointer}.control-row button:disabled {opacity:.45;cursor:default}
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="wrap"><div class="brand">SauceDemo<span>Automation case study</span></div><div class="recorded-label">Recorded execution evidence</div></div></header>
+  <main class="wrap">
+    <section class="hero" aria-labelledby="page-title">
+      <div><p class="eyebrow">Test overview</p><h1 id="page-title">Test execution dashboard</h1><p class="muted">%%SCOPE%%</p><p class="snapshot">%%SNAPSHOT%%</p></div>
+      <div class="actions">%%REPORT%%</div>
+    </section>
+    <section class="panel" aria-labelledby="runner-title">
+      <div class="panel-head"><div><h2 id="runner-title">Run Selenium tests</h2><p id="runner-status" role="status">Open OPEN_DASHBOARD.cmd to enable live testing.</p></div></div>
+      <div class="outcomes" id="runner-buttons">
+<div class="control-row"><strong>All modules (25)</strong><button disabled class="button" data-module="all" data-action="run">Run</button><button disabled class="button" data-module="all" data-action="pause">Pause</button><button disabled class="button" data-module="all" data-action="terminate">Terminate</button></div>
+<div class="control-row"><strong>Login (8)</strong><button disabled class="button" data-module="login" data-action="run">Run</button><button disabled class="button" data-module="login" data-action="pause">Pause</button><button disabled class="button" data-module="login" data-action="terminate">Terminate</button></div>
+<div class="control-row"><strong>Products &amp; Cart (6)</strong><button disabled class="button" data-module="cart" data-action="run">Run</button><button disabled class="button" data-module="cart" data-action="pause">Pause</button><button disabled class="button" data-module="cart" data-action="terminate">Terminate</button></div>
+<div class="control-row"><strong>Checkout (11)</strong><button disabled class="button" data-module="checkout" data-action="run">Run</button><button disabled class="button" data-module="checkout" data-action="pause">Pause</button><button disabled class="button" data-module="checkout" data-action="terminate">Terminate</button></div>
+      </div>
+    </section>
+    <section class="metrics" aria-label="Recorded run totals">
+      <article class="metric"><div class="metric-label">Recorded tests</div><div class="metric-value" id="total-count">%%TOTAL%%</div><small>%%CORE%%</small></article>
+      <article class="metric good"><div class="metric-label">Passed</div><div class="metric-value" id="passed-count">%%PASSED%%</div><small>Assertions satisfied</small></article>
+      <article class="metric bad"><div class="metric-label">Failed or errors</div><div class="metric-value" id="failed-count">%%FAILED%%</div><small>Review the evidence below</small></article>
+      <article class="metric"><div class="metric-label">Pass rate</div><div class="metric-value" id="pass-rate">%%RATE%%</div><small>From this recorded run</small></article>
+    </section>
+<section class="panel"><div class="panel-head"><div><h2>Case-study catalogue (25)</h2><p>All planned cases in assignment order. Recorded execution results appear separately below.</p></div></div><div class="table-scroll"><table><thead><tr><th>Case</th><th>Module and owner</th><th>Steps and test identifier</th><th>Expected result</th></tr></thead><tbody>
+<tr><th scope="row">TC-01</th><td>Login<small>FR-01 / Member 1</small></td><td>Submit standard_user and secret_sauce<small class="node">tests/test_login.py::test_successful_login</small></td><td>Standard account opens Products</td></tr>
+<tr><th scope="row">TC-02</th><td>Login<small>FR-02 / Member 1</small></td><td>Submit standard_user and wrong_password<small class="node">tests/test_login.py::test_rejected_login[invalid-password]</small></td><td>Error; remains on Login</td></tr>
+<tr><th scope="row">TC-03</th><td>Login<small>FR-03 / Member 1</small></td><td>Submit a blank username with secret_sauce<small class="node">tests/test_login.py::test_rejected_login[blank-username]</small></td><td>Username-required error</td></tr>
+<tr><th scope="row">TC-04</th><td>Login<small>FR-04 / Member 1</small></td><td>Submit standard_user with a blank password<small class="node">tests/test_login.py::test_rejected_login[blank-password]</small></td><td>Password-required error</td></tr>
+<tr><th scope="row">TC-05</th><td>Login<small>FR-03 / Member 1</small></td><td>Submit both fields blank<small class="node">tests/test_login.py::test_rejected_login[both-blank]</small></td><td>Username-required error</td></tr>
+<tr><th scope="row">TC-06</th><td>Login<small>FR-05 / Member 2</small></td><td>Submit an unknown 29-character username<small class="node">tests/test_login.py::test_username_length_boundary[below-30]</small></td><td>Unknown 29-character username rejected; limited observation</td></tr>
+<tr><th scope="row">TC-07</th><td>Login<small>FR-05 / Member 2</small></td><td>Submit an unknown 30-character username<small class="node">tests/test_login.py::test_username_length_boundary[at-30]</small></td><td>Unknown 30-character username rejected; limited observation</td></tr>
+<tr><th scope="row">TC-08</th><td>Login<small>FR-05 / Member 2</small></td><td>Submit an unknown 31-character username<small class="node">tests/test_login.py::test_username_length_boundary[above-30]</small></td><td>Unknown 31-character username rejected; limited observation</td></tr>
+<tr><th scope="row">TC-09</th><td>Products &amp; Cart<small>FR-10 / Member 2</small></td><td>Log out and navigate directly to /inventory.html<small class="node">tests/test_inventory_cart.py::test_protected_page_after_logout[/inventory.html]</small></td><td>Redirects to Login</td></tr>
+<tr><th scope="row">TC-10</th><td>Products &amp; Cart<small>FR-10 / Member 2</small></td><td>Log out and navigate directly to /cart.html<small class="node">tests/test_inventory_cart.py::test_protected_page_after_logout[/cart.html]</small></td><td>Redirects to Login</td></tr>
+<tr><th scope="row">TC-11</th><td>Products &amp; Cart<small>FR-06 / Member 3</small></td><td>Inspect every product after standard login<small class="node">tests/test_inventory_cart.py::test_product_catalog</small></td><td>At least six named, priced, addable products</td></tr>
+<tr><th scope="row">TC-12</th><td>Products &amp; Cart<small>FR-07 / Member 3</small></td><td>Add Backpack, then Bike Light<small class="node">tests/test_inventory_cart.py::test_add_to_cart</small></td><td>Badge increments; buttons become Remove</td></tr>
+<tr><th scope="row">TC-13</th><td>Products &amp; Cart<small>FR-08 / Member 3</small></td><td>Remove Backpack, then Bike Light from a two-item cart<small class="node">tests/test_inventory_cart.py::test_remove_from_cart</small></td><td>Badge decrements; buttons become Add to cart</td></tr>
+<tr><th scope="row">TC-14</th><td>Products &amp; Cart<small>FR-09 / Member 3</small></td><td>Compare both product names and prices between inventory and Cart<small class="node">tests/test_inventory_cart.py::test_cart_details_match_products</small></td><td>Cart names/prices match inventory</td></tr>
+<tr><th scope="row">TC-15</th><td>Checkout<small>FR-11 / Member 4</small></td><td>Add Backpack, open Cart and click Checkout<small class="node">tests/test_checkout.py::test_checkout_navigation</small></td><td>Checkout information page opens</td></tr>
+<tr><th scope="row">TC-16</th><td>Checkout<small>FR-12 / Member 4</small></td><td>Continue with blank first name, Tester and 12345<small class="node">tests/test_checkout.py::test_mandatory_information[missing-first-name]</small></td><td>First-name error; stays on information page</td></tr>
+<tr><th scope="row">TC-17</th><td>Checkout<small>FR-13 / Member 4</small></td><td>Continue with Demo, blank last name and 12345<small class="node">tests/test_checkout.py::test_mandatory_information[missing-last-name]</small></td><td>Last-name error; stays on information page</td></tr>
+<tr><th scope="row">TC-18</th><td>Checkout<small>FR-15 / Member 4</small></td><td>Continue with Demo, Tester and 12345<small class="node">tests/test_checkout.py::test_checkout_overview</small></td><td>Valid information opens Overview</td></tr>
+<tr><th scope="row">TC-19</th><td>Checkout<small>FR-16 / Member 4</small></td><td>Reach Overview with valid information and click Finish<small class="node">tests/test_checkout.py::test_finish_order</small></td><td>Finish shows order-success message</td></tr>
+<tr><th scope="row">TC-20</th><td>Checkout<small>FR-14 / Member 5</small></td><td>Continue with Demo, Tester and blank postal code<small class="node">tests/test_checkout.py::test_mandatory_information[missing-postal]</small></td><td>Postal-required error; stays on information page</td></tr>
+<tr><th scope="row">TC-21</th><td>Checkout<small>FR-14 / Member 5</small></td><td>Continue with Demo, Tester and 1234<small class="node">tests/test_checkout.py::test_postal_code_contract[four-digits-invalid]</small></td><td>Reject 1234</td></tr>
+<tr><th scope="row">TC-22</th><td>Checkout<small>FR-14 / Member 5</small></td><td>Continue with Demo, Tester and 12345<small class="node">tests/test_checkout.py::test_postal_code_contract[five-digits-valid]</small></td><td>Accept 12345; opens Overview</td></tr>
+<tr><th scope="row">TC-23</th><td>Checkout<small>FR-14 / Member 5</small></td><td>Continue with Demo, Tester and 123456<small class="node">tests/test_checkout.py::test_postal_code_contract[six-digits-valid]</small></td><td>Accept 123456; opens Overview</td></tr>
+<tr><th scope="row">TC-24</th><td>Checkout<small>FR-14 / Member 5</small></td><td>Continue with Demo, Tester and ABCDE<small class="node">tests/test_checkout.py::test_postal_code_contract[alphabetic-invalid]</small></td><td>Reject ABCDE</td></tr>
+<tr><th scope="row">TC-25</th><td>Checkout<small>FR-14 / Member 5</small></td><td>Continue with Demo, Tester and 12A45<small class="node">tests/test_checkout.py::test_postal_code_contract[mixed-invalid]</small></td><td>Reject 12A45</td></tr></tbody></table></div></section>
+    <section class="panel" aria-labelledby="team-title">
+      <div class="panel-head"><div><h2 id="team-title">Team assignments</h2><p>Assigned ownership, with results attributed from the recorded run.</p></div>%%STATE%%</div>
+      <div class="outcomes"><div class="bar" aria-hidden="true">%%SEGMENTS%%</div><p class="legend">%%LEGEND%%</p></div>
+      <div class="table-scroll"><table class="team-table"><thead><tr><th scope="col">Owner</th><th scope="col">Work area</th><th scope="col">Assigned cases</th><th scope="col">Recorded result</th></tr></thead><tbody>%%TEAM%%</tbody></table></div>
+      <p class="team-note">The first five members own 25 unique functional cases. Member 6 owns performance, framework integration and evidence. FR-05 observes unknown-account rejection; it does not isolate a username-length validator.</p>
+    </section>
+    <section class="panel" aria-labelledby="performance-title">
+      <div class="panel-head"><div><h2 id="performance-title">Performance results</h2><p>Separate load run: %%PERF_DATE%% / %%PERF_PROFILE%% / %%PERF_SAMPLES%% samples</p></div>%%JMETER%%</div>
+      <div class="performance">%%NFRS%%</div>
+      <p class="performance-note"><strong>HTTP document timings.</strong> Products measures the verified SPA bootstrap document, excluding authentication, rendering and the initial redirect hop. These figures are recorded results from the separate load run.</p>
+    </section>
+    <section class="panel" aria-labelledby="cases-title">
+      <div class="panel-head"><div><h2 id="cases-title">Recorded results for all 25 cases</h2><p>Failures appear first. Open the screenshot or assertion for the exact observation.</p></div><div class="filters" role="group" aria-label="Filter test outcomes"><button class="filter-button" data-filter="all" aria-pressed="true">All</button><button class="filter-button" data-filter="failed" aria-pressed="false">Failed / errors</button><button class="filter-button" data-filter="passed" aria-pressed="false">Passed</button></div></div>
+      <div class="table-scroll"><table class="test-table"><thead><tr><th scope="col">Test case</th><th scope="col">Requirement</th><th scope="col">Owner</th><th scope="col">Outcome</th><th scope="col">Evidence</th></tr></thead><tbody id="case-results">%%CASES%%</tbody></table></div>
+      <p class="table-foot" id="filter-count" aria-live="polite">Showing %%RECORDED%% recorded tests.</p>
+    </section>
+    <footer><p>Generated from local execution evidence. No tests run when you open this page.</p><p>Recorded case-study evidence from 4 November 2026.</p></footer>
+  </main>
+  <script>
+    if (location.origin === 'http://127.0.0.1:8766') {
+      const controls = Array.from(document.querySelectorAll('[data-module]'));
+      const status = document.querySelector('#runner-status');
+
+      function update(run) {
+        controls.forEach(b => {
+          const active = run.running && run.module === b.dataset.module && run.mode !== 'terminate';
+          b.disabled = b.dataset.action === 'run' ? run.running : !active;
+          if (b.dataset.action === 'pause' || b.dataset.action === 'resume') {
+            b.dataset.action = active && run.mode === 'pause' ? 'resume' : 'pause';
+            b.textContent = b.dataset.action === 'resume' ? 'Resume' : 'Pause';
+          }
+        });
+        status.textContent = run.message;
+
+
+      }
+      async function poll() {
+        try { update(await (await fetch('/status', {cache:'no-store'})).json()); }
+        catch { controls.forEach(b => b.disabled = true); status.textContent = 'Reconnect using OPEN_DASHBOARD.cmd.'; }
+      }
+      controls.forEach(b => b.onclick = async () => {
+        controls.forEach(item => item.disabled = true);
+        try { update(await (await fetch('/' + b.dataset.action + '/' + b.dataset.module, {method:'POST'})).json()); }
+        catch { status.textContent = 'Could not start the run.'; }
+      });
+      poll(); setInterval(poll, 1500);
+    }
+    const rows = Array.from(document.querySelectorAll('#case-results tr[data-outcome]'));
+    const buttons = Array.from(document.querySelectorAll('.filter-button'));
+    buttons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        const filter = button.dataset.filter;
+        buttons.forEach(function(item) { item.setAttribute('aria-pressed', String(item === button)); });
+        let visible = 0;
+        rows.forEach(function(row) {
+          const match = filter === 'all' || (filter === 'failed' ? ['failed','error'].includes(row.dataset.outcome) : row.dataset.outcome === filter);
+          row.hidden = !match;
+          if (match) visible += 1;
+        });
+        document.getElementById('filter-count').textContent = 'Showing ' + visible + ' of ' + rows.length + ' recorded tests.';
+      });
+    });
+  </script>
+</body>
+</html>

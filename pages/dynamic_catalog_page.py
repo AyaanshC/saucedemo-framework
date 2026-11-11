@@ -31,7 +31,6 @@ class DynamicCatalogPage(AppPage):
         before = len(self.items('lazy-load'))
         sentinel = self.visible(self.testid('dynamic-catalog-lazy-load-sentinel'))
         self.driver.execute_script('arguments[0].scrollIntoView({block: "center"});', sentinel)
-        self.pause_for_demo()
         self.wait.until(lambda _: len(self.items('lazy-load')) > before)
 
     def slider_item(self):

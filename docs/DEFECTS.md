@@ -80,7 +80,7 @@ negative-only evidence as proof of a 30-character acceptance limit.
 
 The following observations were reproduced on 3 November 2026. The expected behavior is a proposed
 acceptance rule beyond the original brief, not an additional FR requirement. These three cases carry
-the `proposed_contract` marker and are included in the default run so the decision remains visible.
+the `proposed_contract` marker and run under optional extended/full selection or that specific marker.
 
 ### APP-CHECKOUT-EMPTY: checkout can start with an empty cart
 

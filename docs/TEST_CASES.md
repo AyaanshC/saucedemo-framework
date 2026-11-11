@@ -1,6 +1,8 @@
 # Expanded functional test inventory
 
-The suite contains **157 cases: 25 original + 132 extended**. The 12-case smoke subset is unchanged.
+The suite contains **157 cases: 25 original + 132 extended**. The default run and launcher select the
+25 original cases. The 12-case smoke subset is optional. See [TEAM_ASSIGNMENTS.md](TEAM_ASSIGNMENTS.md)
+for the 25-case list and six-person ownership plan.
 
 This inventory lists the actual collected pytest node IDs. Every parameterized row is an independent case with a fresh Chrome session. All cases carry the regression marker; new modules also carry extended.
 
@@ -22,7 +24,7 @@ This inventory lists the actual collected pytest node IDs. Every parameterized r
 
 - The original 25 cases follow the case-study FR mapping in TEST_DESIGN.md; FR-05 retains its documented observability limitation.
 - APP-* labels are app-area labels, not original brief IDs. The six-product JSON file, 8% tax, payment/shipping strings and link targets are observed regression baselines from 3 November 2026. Review them when intentional app changes occur.
-- Three proposed_contract cases require product-owner agreement: reject empty-cart checkout and whitespace-only first/last names. Whitespace postal rejection maps directly to FR-14. All are included in the default run and can be selected separately.
+- Three proposed_contract cases require product-owner agreement: reject empty-cart checkout and whitespace-only first/last names. Whitespace postal rejection maps directly to FR-14. These cases are optional and run under extended/full selection or their specific markers.
 - All advertised non-locked account types are checked for login. Full shopping flows use standard_user; deliberate defects in other personas are not exhaustively mapped.
 - Footer and About hrefs are asserted; third-party websites are not visited. Reset checks persisted state after refresh, not immediate button repaint.
 - The PDF check verifies a completed download with a PDF header, EOF marker and nontrivial size; it does not validate receipt text or pagination.
@@ -33,6 +35,7 @@ This inventory lists the actual collected pytest node IDs. Every parameterized r
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest
+.\.venv\Scripts\python.exe -m pytest -m regression
 .\.venv\Scripts\python.exe -m pytest -m extended
 .\.venv\Scripts\python.exe -m pytest -m "not extended"
 .\.venv\Scripts\python.exe -m pytest -m case_study

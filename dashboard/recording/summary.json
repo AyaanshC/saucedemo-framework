@@ -1,0 +1,213 @@
+{
+  "started_utc": "2026-11-04T10:18:18.182559+05:30",
+  "finished_utc": "2026-11-04T10:21:12.973559+05:30",
+  "exit_code": 1,
+  "results": [
+    {
+      "test": "tests/test_checkout.py::test_checkout_navigation",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-11"
+      ]
+    },
+    {
+      "test": "tests/test_checkout.py::test_mandatory_information[missing-first-name]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-12"
+      ]
+    },
+    {
+      "test": "tests/test_checkout.py::test_mandatory_information[missing-last-name]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-13"
+      ]
+    },
+    {
+      "test": "tests/test_checkout.py::test_mandatory_information[missing-postal]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-14"
+      ]
+    },
+    {
+      "test": "tests/test_checkout.py::test_postal_code_contract[four-digits-invalid]",
+      "phase": "call",
+      "outcome": "failed",
+      "requirements": [
+        "FR-14"
+      ],
+      "failure": "AssertionError: FR-14: postal='1234'; expected error, got overview. If invalid input reached Overview, the AUT violates the case-study contract.\nassert 'overview' == 'error'\n  \n  - error\n  + overview",
+      "screenshot": "dashboard/recording/four-digits-invalid.png"
+    },
+    {
+      "test": "tests/test_checkout.py::test_postal_code_contract[five-digits-valid]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-14"
+      ]
+    },
+    {
+      "test": "tests/test_checkout.py::test_postal_code_contract[six-digits-valid]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-14"
+      ]
+    },
+    {
+      "test": "tests/test_checkout.py::test_postal_code_contract[alphabetic-invalid]",
+      "phase": "call",
+      "outcome": "failed",
+      "requirements": [
+        "FR-14"
+      ],
+      "failure": "AssertionError: FR-14: postal='ABCDE'; expected error, got overview. If invalid input reached Overview, the AUT violates the case-study contract.\nassert 'overview' == 'error'\n  \n  - error\n  + overview",
+      "screenshot": "dashboard/recording/alphabetic-invalid.png"
+    },
+    {
+      "test": "tests/test_checkout.py::test_postal_code_contract[mixed-invalid]",
+      "phase": "call",
+      "outcome": "failed",
+      "requirements": [
+        "FR-14"
+      ],
+      "failure": "AssertionError: FR-14: postal='12A45'; expected error, got overview. If invalid input reached Overview, the AUT violates the case-study contract.\nassert 'overview' == 'error'\n  \n  - error\n  + overview",
+      "screenshot": "dashboard/recording/mixed-invalid.png"
+    },
+    {
+      "test": "tests/test_checkout.py::test_checkout_overview",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-15"
+      ]
+    },
+    {
+      "test": "tests/test_checkout.py::test_finish_order",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-16"
+      ]
+    },
+    {
+      "test": "tests/test_inventory_cart.py::test_product_catalog",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-06"
+      ]
+    },
+    {
+      "test": "tests/test_inventory_cart.py::test_add_to_cart",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-07"
+      ]
+    },
+    {
+      "test": "tests/test_inventory_cart.py::test_remove_from_cart",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-08"
+      ]
+    },
+    {
+      "test": "tests/test_inventory_cart.py::test_cart_details_match_products",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-09"
+      ]
+    },
+    {
+      "test": "tests/test_inventory_cart.py::test_protected_page_after_logout[/inventory.html]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-10"
+      ]
+    },
+    {
+      "test": "tests/test_inventory_cart.py::test_protected_page_after_logout[/cart.html]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-10"
+      ]
+    },
+    {
+      "test": "tests/test_login.py::test_successful_login",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-01"
+      ]
+    },
+    {
+      "test": "tests/test_login.py::test_rejected_login[invalid-password]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-02"
+      ]
+    },
+    {
+      "test": "tests/test_login.py::test_rejected_login[blank-username]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-03"
+      ]
+    },
+    {
+      "test": "tests/test_login.py::test_rejected_login[blank-password]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-04"
+      ]
+    },
+    {
+      "test": "tests/test_login.py::test_rejected_login[both-blank]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-03"
+      ]
+    },
+    {
+      "test": "tests/test_login.py::test_username_length_boundary[below-30]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-05"
+      ]
+    },
+    {
+      "test": "tests/test_login.py::test_username_length_boundary[at-30]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-05"
+      ]
+    },
+    {
+      "test": "tests/test_login.py::test_username_length_boundary[above-30]",
+      "phase": "call",
+      "outcome": "passed",
+      "requirements": [
+        "FR-05"
+      ]
+    }
+  ]
+}

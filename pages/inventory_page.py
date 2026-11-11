@@ -32,7 +32,6 @@ class InventoryPage(AppPage):
 
     def sort(self, value):
         Select(self.visible(self.testid('product-sort-container'))).select_by_value(value)
-        self.pause_for_demo()
         self.wait.until(lambda _: self.sort_value() == value)
 
     def sort_value(self):

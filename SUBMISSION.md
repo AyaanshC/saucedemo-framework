@@ -4,6 +4,8 @@ Download the [verified source-and-evidence ZIP](https://github.com/AyaanshC/sauc
 and [checksum](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/saucedemo-case-study-submission.zip.sha256)
 from the [v1.0.0 release](https://github.com/AyaanshC/saucedemo-framework/releases/tag/v1.0.0).
 Use this asset for submission; GitHub's automatic source-code archive excludes generated evidence.
+That release is the earlier verified snapshot. The current working version defaults to the original
+25 cases; its [six-person work plan](docs/TEAM_ASSIGNMENTS.md) lists ownership and individual commands.
 
 ## Which tests are required?
 
@@ -25,14 +27,18 @@ Have Chrome, Python 3.11+, and Java 8+ installed. If Java is not on PATH, pass i
 path to the performance runner using `--java`. Internet is required. Extract the submission ZIP
 to a writable folder before running setup. Environments, drivers and tools are rebuilt locally.
 
-For the visible demo, double-click `START_DEMO.cmd`. It runs the 12 core smoke cases with 2-second
+For the visible demo, double-click `START_DEMO.cmd`. It runs all 25 case-study cases with 2-second
 action pauses and a 3-second final-screen pause. This intentional presentation pacing is explicitly
 justified in code; explicit waits still perform synchronization.
+After execution, the local results dashboard opens. Use OPEN_DASHBOARD.cmd to view recorded
+results without starting another test run. No additional tests are included by default.
+The detailed six-person PDF is at <code>output/pdf/six-person-work-plan-and-results.pdf</code>.
+The package includes the dashboard snapshot and this PDF when available.
 
 ## Evidence to present
 
 - `reports/case-study.html`: original 25-case submission execution and embedded failure screenshots.
-- `reports/smoke.html`: recorded smoke evidence; the demo regenerates it.
+- `reports/smoke.html`: optional smoke evidence; `scripts/demo.ps1 -Suite smoke` regenerates it.
 - `reports/expanded-initial.html` and `reports/dynamic-check.html`: optional extended coverage.
 - `reports/slider-demo-check.html`: corrected headed slider checks; the earlier timing-test report
   is retained as development history and is explained in `docs/EXPANDED_VERIFICATION.md`.

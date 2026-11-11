@@ -20,7 +20,7 @@ evidence. It distinguishes implemented automation, observed app discrepancies, a
 | 6.3 | Named JMX, JTL, CSV and complete HTML dashboard | `performance/jmx/saucedemo_weekend_lab.jmx`, `results/`, `html_report/` | Included in submission ZIP |
 | 6.3 | NFR findings | `performance/Findings.md`, source metadata and route proof | Included in submission ZIP |
 | 7.1 | POM, explicit waits, two data-driven test families | `pages/`, WebDriverWait, `testdata/login_cases.json`, `postal_cases.json` | Implemented |
-| 7.1 | Smoke/regression selection | `pytest.ini`; smoke 12, original case-study 25, default regression 157 | Implemented |
+| 7.1 | Smoke/regression selection | `pytest.ini`; default case-study 25, optional smoke 12, explicit regression 157 | Implemented |
 | 7.1 | Failure PNGs, file logs, HTML reports | `conftest.py`, `reports/screenshots/`, `reports/logs/`, self-contained HTML | Executed evidence included |
 | 7.1 | Reproducible README smoke/full instructions | `README.md`, `SUBMISSION.md`, setup/demo/package scripts | Implemented; portable ZIP checked |
 | 8 | Framework demonstration | `START_DEMO.cmd`, `scripts/demo.ps1`, `DEMO_GUIDE.md`, recorded headed checks | Ready for the student's presentation |
@@ -29,8 +29,10 @@ evidence. It distinguishes implemented automation, observed app discrepancies, a
 
 The PDF defines a minimum of **eight distinct FRs**, not eight cases or 157 cases. The original
 25 cases represent FR-01–FR-16 and include the mandatory six plus multiple additional FRs. The
-132 optional extended cases bring the total to 157. Use `-m case_study` for the original scope;
-alternate valid personas and proposed acceptance rules remain in `extended`.
+132 optional extended cases bring the total to 157. The default run and launcher select the original
+25. Use `-m regression` for all 157. The [six-person plan](TEAM_ASSIGNMENTS.md) assigns all original
+cases plus required framework, performance, evidence and demo work. For the original scope,
+use `-m case_study`; alternate valid personas and proposed acceptance rules remain in `extended`.
 
 ## Explicit FR-05 limitation
 

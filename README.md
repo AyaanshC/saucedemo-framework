@@ -2,11 +2,15 @@
 
 A Python test automation framework using Selenium 4, pytest, and the Page Object Model for
 [SauceDemo](https://www.saucedemo.com/), built for **Automation Framework Case Study v1.0**.
-It contains **157 independent functional cases**: the original **25 cases mapped to FR-01 through
-FR-16** and **132 extended app checks**. The visible demo keeps its focused **12-test smoke suite**.
+The default run and visible demo execute the **25 case-study cases mapped to FR-01 through FR-16**.
+A **12-test smoke subset** and **132 optional extended app checks** are selectable separately;
+the complete regression suite contains **157 independent functional cases**.
 An Apache JMeter HTTP performance plan is also included.
 
 ## Download the verified submission
+
+The release below records the earlier verification snapshot. The current working version defaults
+to the 25-case suite and adds a [six-person work plan](docs/TEAM_ASSIGNMENTS.md).
 
 [Download the complete submission ZIP](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/saucedemo-case-study-submission.zip)
 and its [SHA-256 checksum](https://github.com/AyaanshC/saucedemo-framework/releases/download/v1.0.0/saucedemo-case-study-submission.zip.sha256)
@@ -33,7 +37,9 @@ The PDF specifies requirements, not a fixed number of test cases. Its minimum is
 FR-07, FR-12, FR-14, FR-16 plus at least two additional requirements including negative/boundary
 coverage. The original 25 cases already exceed that minimum; the other 132 are optional extensions.
 Use `-m case_study` to run the original 25-case submission suite with `standard_user` as the valid
-shopping account. The 157-case default includes the extended checks. FR-05 has a documented
+shopping account. Plain `pytest` also selects these 25; use `-m regression` for all 157, or
+`-m extended` for the optional 132. See the [six-person assignments](docs/TEAM_ASSIGNMENTS.md)
+for exact case ownership, individual run commands and required deliverables. FR-05 has a documented
 observability limitation and carries `coverage_limited`; it is not needed to meet the minimum.
 
 See [SUBMISSION.md](SUBMISSION.md) for the hand-in package and
@@ -81,13 +87,21 @@ outputs and are not bundled in Git. The submission ZIP built below includes the 
 1. Clone this repository or extract its ZIP to a writable folder.
 2. Have Python 3.11+ and Google Chrome installed, with internet access.
 3. Double-click **START_DEMO.cmd**. It sets up a local `.venv` on first use, shows Chrome running
-   the 12 smoke tests at a presentation pace, and opens the HTML report when finished. It pauses
-   **2 seconds after each navigation, click, and field entry**, and keeps each test's final screen
-   visible for **3 seconds** before closing Chrome. The console remains open.
+   all 25 case-study tests at normal Chrome speed and opens the results dashboard.
 
-The smoke subset includes positive and negative flows. The full suite additionally tests invalid
-postal codes against the case study's expected behavior. Application defects must appear as failures.
+The default suite includes the invalid postal-code checks required by the brief. Application defects
+must appear as failures. Use `scripts/demo.ps1 -Suite smoke` for the shorter 12-case demo.
 Read **DEMO_GUIDE.md** for the presentation walkthrough and **docs/TEST_DESIGN.md** for the detailed analysis.
+
+## Presentation dashboard
+
+Double-click **OPEN_DASHBOARD.cmd** to display the saved 25-case run from 4 November 2026.
+It records 22 passes and three FR-14 postal validation failures. The dashboard reads its
+case results and screenshots from the fixed evidence in the dashboard/recording folder.
+
+Choose Login (8), Products & Cart (6), Checkout (11), or all modules (25) for a visible
+Selenium demonstration. Run, Pause/Resume and Terminate control the demonstration.
+Dashboard-launched demos use temporary output and preserve the displayed recording.
 
 ## Manual setup
 
@@ -115,20 +129,16 @@ If downloads are blocked, provide a ChromeDriver matching your installed Chrome:
 ## Functional execution
 
 ```powershell
-# Visible Chrome, smoke suite, report opens automatically
+# Visible Chrome, all 25 case-study cases, dashboard opens automatically
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo.ps1
-
-# Slower presentation, with more time to explain each step
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo.ps1 -StepDelay 3 -EndPause 5
-
-# Visible demo at full speed
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo.ps1 -StepDelay 0 -EndPause 0
 
 # Headless smoke suite
 .\.venv\Scripts\python.exe -m pytest -m smoke --html=reports/smoke.html --junitxml=reports/smoke-junit.xml
 
-# Complete suite / all regression tests (157 cases)
+# Default assignment suite (25 cases)
 .\.venv\Scripts\python.exe -m pytest
+
+# Complete suite / all regression tests (157 cases)
 .\.venv\Scripts\python.exe -m pytest -m regression
 
 # Only the 132 added app checks
@@ -141,21 +151,18 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo.ps1 -StepDela
 # Broad regression without the three proposed acceptance-rule checks
 .\.venv\Scripts\python.exe -m pytest -m "not proposed_contract"
 
-# Full visible demo, report opens automatically
+# Full visible demo, dashboard opens automatically
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\demo.ps1 -Suite full
 
 # Isolate the case-study postal-code contract
 .\.venv\Scripts\python.exe -m pytest tests/test_checkout.py -k postal_code_contract --headed
 
-# Present a single order flow slowly
-.\.venv\Scripts\python.exe -m pytest tests/test_checkout.py::test_finish_order --headed --slow-mo 2 --end-pause 3
+# Present a single order flow
+.\.venv\Scripts\python.exe -m pytest tests/test_checkout.py::test_finish_order --headed
 ```
 
 Default is headless unless `--headed` is provided. Each test gets a fresh Chrome session so tests
-do not depend on execution order. Synchronization uses explicit waits. The optional presentation
-pauses help viewers follow actions; they do not replace readiness checks. Direct pytest runs have
-no presentation delay by default, and headless execution ignores presentation pauses. Delay values
-must be finite, non-negative seconds. Slower presentation runs take longer to complete.
+do not depend on execution order. Synchronization uses explicit waits. Chrome runs without added action delays.
 Exit code 0 means the selected tests passed; 1 means assertions failed; setup errors appear as errors.
 The expected live-site contract discrepancies are documented in **docs/DEFECTS.md** after verification.
 
@@ -163,11 +170,14 @@ The expected live-site contract discrepancies are documented in **docs/DEFECTS.m
 
 | Path | Purpose |
 |---|---|
+| `reports/case-study.html` | Default visible demo report for all 25 assignment cases |
+| `reports/case-study-junit.xml` | Machine-readable default demo results |
 | `reports/smoke.html` | Generated self-contained smoke report |
-| `reports/functional.html` | Full-suite report with embedded failure screenshots |
+| `reports/functional.html` | Direct pytest report for the selected suite, with embedded failure screenshots |
 | `reports/screenshots/*.png` | Original failure evidence |
+| `reports/logs/case-study.log` | Default visible demo: test name, step, status |
 | `reports/logs/execution.log` | Latest execution: test name, step, status |
-| `reports/junit.xml` | Machine-readable full-suite results |
+| `reports/junit.xml` | Machine-readable direct pytest results for the selected suite |
 | `reports/run-summary.json` | Latest outcomes, requirement IDs, durations and evidence paths |
 | `VERIFICATION.md` | Recorded historical run summary and environment |
 
@@ -177,7 +187,7 @@ preserve your own run. Failed tests are never automatically retried, skipped, or
 ## Recorded results and known limitations
 
 The recorded run on **3 November 2026** produced **12 smoke passes** and **22 passes / 3 failures**
-in the full suite. The three failures check the case-study FR-14 contract: postal codes `1234`,
+in the original 25-case suite. The three failures check the case-study FR-14 contract: postal codes `1234`,
 `ABCDE`, and `12A45` were accepted by the application instead of rejected. These assertions remain
 active. See [the defect notes](docs/DEFECTS.md) for reproduction steps; later live results may differ.
 
@@ -194,8 +204,9 @@ The catalog in `testdata/products.json`, 8% tax, payment/shipping labels, and ex
 are reviewable regression baselines observed on 3 November 2026. They are not additional claims
 about the original brief. Three `proposed_contract` cases ask whether an empty cart should be blocked
 from checkout and whether whitespace-only first/last names should be rejected. These proposed rules
-need product-owner agreement; they remain visible in the default run. The whitespace-only postal
-case is explicitly FR-14 because a postal code containing only spaces is not numeric.
+need product-owner agreement; they run only when the extended/full suite or their marker is selected.
+The whitespace-only postal case is explicitly FR-14 because a postal code containing only spaces
+is not numeric.
 
 The PDF case checks that a completed order downloads a nonempty, complete PDF. It does not parse the
 receipt's contents. Footer and About URLs are checked without testing third-party websites. Alternate

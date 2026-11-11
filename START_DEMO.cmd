@@ -8,7 +8,7 @@ if not exist ".venv\Scripts\python.exe" (
     exit /b 1
   )
 )
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "scripts\demo.ps1" -Suite smoke
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "scripts\demo.ps1" -Suite case-study
 set "DEMO_EXIT=%ERRORLEVEL%"
 pause
 exit /b %DEMO_EXIT%

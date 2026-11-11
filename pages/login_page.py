@@ -20,4 +20,3 @@ class LoginPage(BasePage):
         self.fill(self.testid('username'), username)
         self.fill(self.testid('password'), password)
         self.visible(self.testid('password')).send_keys(Keys.ENTER)
-        self.pause_for_demo()

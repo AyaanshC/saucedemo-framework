@@ -1,6 +1,5 @@
 """Shared explicit waits and observable page actions."""
 import logging
-import time
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -19,17 +18,9 @@ class BasePage:
     def testid(value):
         return By.CSS_SELECTOR, f'[data-test="{value}"]'
 
-    def pause_for_demo(self):
-        """Give viewers time to follow an action; explicit waits still check readiness."""
-        delay = getattr(self.driver, '_demo_step_delay', 0)
-        if delay:
-            # Case-study sleep exception: opt-in presentation pacing, never a readiness check.
-            time.sleep(delay)
-
     def open(self, path='/'):
         log.info('STEP navigate %s', path)
         self.driver.get(self.base_url + path)
-        self.pause_for_demo()
         return self
 
     def visible(self, locator):
@@ -38,7 +29,6 @@ class BasePage:
     def click(self, locator):
         log.info('STEP click %s', locator)
         self.wait.until(EC.element_to_be_clickable(locator)).click()
-        self.pause_for_demo()
 
     def fill(self, locator, value):
         # Do not log field values, which may contain credentials or personal data.
@@ -46,7 +36,6 @@ class BasePage:
         element = self.visible(locator)
         element.clear()
         element.send_keys(value)
-        self.pause_for_demo()
 
     def path_is(self, suffix):
         self.wait.until(lambda d: d.current_url.split('?')[0].endswith(suffix))

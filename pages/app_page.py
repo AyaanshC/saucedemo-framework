@@ -47,4 +47,3 @@ class AppPage(BasePage):
 
     def refresh(self):
         self.driver.refresh()
-        self.pause_for_demo()

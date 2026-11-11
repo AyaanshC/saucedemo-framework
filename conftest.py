@@ -1,10 +1,8 @@
 import base64
 import json
 import logging
-import math
 import os
 import re
-import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -20,26 +18,19 @@ from pages.cart_page import CartPage
 from pages.checkout_page import CheckoutPage
 
 ROOT = Path(__file__).parent
+REPORTS = Path(os.environ.get('SAUCE_DEMO_OUTPUT', ROOT / 'reports'))
 log = logging.getLogger('framework')
 
 
 def pytest_addoption(parser):
     parser.addoption('--headed', action='store_true', help='Show Chrome for the live demo')
-    parser.addoption('--slow-mo', type=float, default=0,
-                     help='Presentation pause in seconds after each action in headed Chrome (default: 0)')
-    parser.addoption('--end-pause', type=float, default=0,
-                     help='Keep the final browser state visible for this many seconds in headed Chrome (default: 0)')
     parser.addoption('--base-url', default='https://www.saucedemo.com')
     parser.addoption('--driver-path', default=os.getenv('CHROMEDRIVER_PATH'))
 
 
 def pytest_configure(config):
-    for option in ('--slow-mo', '--end-pause'):
-        value = config.getoption(option)
-        if not math.isfinite(value) or value < 0:
-            raise pytest.UsageError(f'{option} must be a finite, non-negative number of seconds')
-    for folder in ['reports/screenshots', 'reports/logs']:
-        (ROOT / folder).mkdir(parents=True, exist_ok=True)
+    for folder in ['screenshots', 'logs']:
+        (REPORTS / folder).mkdir(parents=True, exist_ok=True)
     config._demo_results = []
     config._demo_start = datetime.now(timezone.utc).isoformat()
 
@@ -74,18 +65,10 @@ def driver(pytestconfig, driver_path, tmp_path):
     browser = webdriver.Chrome(service=Service(driver_path), options=options)
     try:
         browser.set_page_load_timeout(45)
-        browser._demo_step_delay = pytestconfig.getoption('--slow-mo') if headed else 0
         browser._download_dir = download_dir
         yield browser
     finally:
-        try:
-            end_pause = pytestconfig.getoption('--end-pause') if headed else 0
-            if end_pause:
-                log.info('DEMO keeping the final browser state visible for %s seconds', end_pause)
-                # Case-study sleep exception: let the audience inspect the result before Chrome closes.
-                time.sleep(end_pause)
-        finally:
-            browser.quit()
+        browser.quit()
 
 
 @pytest.fixture
@@ -127,9 +110,10 @@ def pytest_runtest_makereport(item, call):
         try:
             browser = item.funcargs['driver']
             safe_name = re.sub(r'[^a-zA-Z0-9_-]', '_', item.nodeid)
-            screenshot = f'reports/screenshots/{safe_name}_{report.when}.png'
+            target = REPORTS / 'screenshots' / f'{safe_name}_{report.when}.png'
+            screenshot = os.path.relpath(target, ROOT).replace(os.sep, '/')
             png = browser.get_screenshot_as_png()
-            (ROOT / screenshot).write_bytes(png)
+            target.write_bytes(png)
             extras = getattr(report, 'extras', [])
             extras.append(pytest_html.extras.png(base64.b64encode(png).decode(), name='Failure screenshot'))
             extras.append(pytest_html.extras.text(browser.current_url, name='Failure URL'))
@@ -153,4 +137,4 @@ def pytest_sessionfinish(session, exitstatus):
     data = {'started_utc': session.config._demo_start,
             'finished_utc': datetime.now(timezone.utc).isoformat(),
             'exit_code': int(exitstatus), 'results': session.config._demo_results}
-    (ROOT / 'reports/run-summary.json').write_text(json.dumps(data, indent=2), encoding='utf-8')
+    (REPORTS / 'run-summary.json').write_text(json.dumps(data, indent=2), encoding='utf-8')

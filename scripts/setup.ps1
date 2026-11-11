@@ -28,4 +28,4 @@ elseif ($WithJMeter) {
     Expand-Archive -LiteralPath $archive -DestinationPath tools -Force
     Write-Host 'JMeter 5.6.3 installed. Java 8+ must be on PATH.'
 }
-Write-Host 'Ready. Run: .\.venv\Scripts\python.exe -m pytest -m smoke --headed'
+Write-Host 'Ready. Run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts\demo.ps1'
